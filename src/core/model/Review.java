@@ -1,20 +1,25 @@
 package core.model;
-// Review.java
-// package core.model;
 
 /**
- * Classe astratta che rappresenta una recensione generica.
+ * Classe astratta che rappresenta una recensione generica tra Traveler e un Reviewable (Trip o Guide), basata su ID.
  */
 public abstract class Review {
     private int idReview;
     private int rating;  // da 1 a 5
     private String text;
 
-    public Review(int idReview, int rating, String text) {
+    private int authorId;   // id del Traveler
+    private int targetId;   // id del Reviewable (Trip o Guide)
+
+    public Review(int idReview, int rating, String text, int authorId, int targetId) {
         this.idReview = idReview;
         setRating(rating);
         this.text = text;
+        this.authorId = authorId;
+        this.targetId = targetId;
     }
+
+    // Getter e setter
 
     public int getIdReview() {
         return idReview;
@@ -41,5 +46,21 @@ public abstract class Review {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public int getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(int targetId) {
+        this.targetId = targetId;
     }
 }

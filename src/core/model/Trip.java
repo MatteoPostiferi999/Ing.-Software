@@ -1,13 +1,12 @@
 package core.model;
 
+import java.util.ArrayList;
 import java.util.List;
-import core.model.Activity;
-import core.model.Skills;
-import core.model.TripStatus;
+
 /**
  * Rappresenta un viaggio con validazioni su attributi critici.
  */
-public class Trip {
+public class Trip implements Reviewable {
     private int idTrip;
     private String title;
     private String description;
@@ -17,15 +16,8 @@ public class Trip {
     private int minTrav;
     private int maxTrav;
     private List<Activity> activities;
+    private List<Review> reviews = new ArrayList<>();
 
-    /**
-     * Costruttore con validazioni:
-     * - title e description non null/empty
-     * - requiredSkill e tripStatus non null
-     * - price >= 0
-     * - 0 <= minTrav <= maxTrav
-     * - activities non null
-     */
     public Trip(int idTrip,
                 String title,
                 String description,
@@ -68,7 +60,7 @@ public class Trip {
         this.activities = activities;
     }
 
-    // Getters and setters con validazioni
+    // Getters e setters
 
     public int getIdTrip() {
         return idTrip;
@@ -164,5 +156,24 @@ public class Trip {
             throw new IllegalArgumentException("Activities list cannot be null");
         }
         this.activities = activities;
+    }
+
+    // Metodi richiesti da Reviewable (senza logica)
+    @Override
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    @Override
+    public void addReview(Review review) {
+        if (review != null) {
+            this.reviews.add(review);
+        }
+    }
+
+    @Override
+    public double getAverageRating() {
+        // Nessuna logica: implementazione vuota o da ignorare
+        return 0.0; // verrà gestita da ReviewService
     }
 }

@@ -1,21 +1,19 @@
 package core.model;
-// Application.java
-//package core.model;
 
 /**
- * Rappresenta la candidatura di una Guide per un Trip.
+ * Rappresenta la candidatura di una Guide per un Trip, utilizzando ID anziché riferimenti diretti.
  */
 public class Application {
     private int idApplication;
-    private int tripId;
     private int guideId;
+    private int tripId;
     private String cv;
     private ApplicationStatus status;
 
-    public Application(int idApplication, int tripId, int guideId, String cv, ApplicationStatus status) {
+    public Application(int idApplication, int guideId, int tripId, String cv, ApplicationStatus status) {
         this.idApplication = idApplication;
-        this.tripId = tripId;
         this.guideId = guideId;
+        this.tripId = tripId;
         this.cv = cv;
         this.status = status;
     }
@@ -30,20 +28,20 @@ public class Application {
         this.idApplication = idApplication;
     }
 
-    public int getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(int tripId) {
-        this.tripId = tripId;
-    }
-
     public int getGuideId() {
         return guideId;
     }
 
     public void setGuideId(int guideId) {
         this.guideId = guideId;
+    }
+
+    public int getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(int tripId) {
+        this.tripId = tripId;
     }
 
     public String getCv() {

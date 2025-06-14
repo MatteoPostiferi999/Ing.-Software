@@ -1,13 +1,16 @@
 package core.model;
-// package core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Guide {
+public class Guide implements Notifiable, Reviewable {
     private int idGuide;
     private List<Skills> skills;
     private List<Trip> assignedTrips;
     private double rating;
+
+    private List<Notification> notifications = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     // Constructor
     public Guide(int idGuide, List<Skills> skills, List<Trip> assignedTrips, double rating) {
@@ -48,5 +51,36 @@ public class Guide {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    // Notifiable implementation
+    @Override
+    public void receiveNotification(Notification notification) {
+        if (notification != null) {
+            notifications.add(notification);
+        }
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    // Reviewable implementation
+    @Override
+    public void addReview(Review review) {
+        if (review != null) {
+            reviews.add(review);
+        }
+    }
+
+    @Override
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    @Override
+    public double getAverageRating() {
+        // Logica disabilitata: demandata a ReviewService
+        return 0.0;
     }
 }
