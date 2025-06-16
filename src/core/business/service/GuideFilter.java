@@ -3,7 +3,6 @@ package core.business.service;
 import core.model.Guide;
 import core.model.Trip;
 import java.util.ArrayList;
-
 import java.util.List;
 
 public class GuideFilter implements TripFilterStrategy {

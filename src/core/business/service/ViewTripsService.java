@@ -5,7 +5,7 @@ import core.model.Trip;
 import java.util.List;
 
 public class ViewTripsService {
-    private TripDAO tripDAO;
+    private final TripDAO tripDAO;
     private TripFilterStrategy strategy;
 
     public ViewTripsService(TripDAO tripDAO) {
@@ -17,10 +17,14 @@ public class ViewTripsService {
     }
 
     public List<Trip> viewTrips() {
-        List<Trip> allTrips = tripDAO.getAll();
-        if (strategy == null) {
-            throw new IllegalStateException("Strategy not set");
+        List<Trip> allTrips = tripDAO.getAll();  // carica tutti i viaggi
+        if (strategy != null) {
+            return strategy.filterTrips(allTrips);
         }
-        return strategy.filterTrips(allTrips);
+        return allTrips;
+    }
+
+    public Trip viewTripDetails(int tripId) {
+        return tripDAO.getById(tripId);
     }
 }

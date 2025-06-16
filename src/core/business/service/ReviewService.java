@@ -1,24 +1,36 @@
 package core.business.service;
 
+import core.dao.interfaces.ReviewDAO;
 import core.model.Review;
+import core.model.ReviewRegister;
 import core.model.Reviewable;
-import core.model.Traveler;
 
 import java.util.List;
 
 public class ReviewService {
-    
-    public void leaveReview(Review review) { }
+    private final ReviewRegister reviewRegister;
+    private final ReviewDAO reviewDAO;
 
-    public List<Review> getReviewsForTarget(Reviewable target) {
-        return null;
+    public ReviewService(ReviewRegister reviewRegister, ReviewDAO reviewDAO) {
+        this.reviewRegister = reviewRegister;
+        this.reviewDAO = reviewDAO;
     }
 
-    public List<Review> getReviewsByAuthor(Traveler author) {
-        return null;
+    // Aggiunge una nuova recensione
+    public void leaveReview(Review review) {
+        reviewRegister.addReview(review);  // per navigazione runtime
+        reviewDAO.save(review);            // per persistenza su DB
     }
 
-    public double calculateAverageRating(Reviewable target) {
-        return 0.0;
+    // Calcola la media dei voti per un Reviewable (Trip o Guide)
+    public double getAverageRating(Reviewable target) {
+        List<Review> reviews = target.getReviews();  // Recupera le recensioni associate al target da register o da interfaccia?
+        if (reviews.isEmpty()) return 0.0;
+
+        int total = 0;
+        for (Review r : reviews) {
+            total += r.getRating();
+        }
+        return (double) total / reviews.size();
     }
 }

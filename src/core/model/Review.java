@@ -9,13 +9,16 @@ public abstract class Review {
     private String text;
     private Traveler author;
     private Reviewable target;
+    private int reviewID;
 
-    public Review(int rating, String text, Traveler author, Reviewable target) {
+    public Review(int rating, String text, Traveler author, Reviewable target, int reviewID) {
         this.rating = rating;
         this.text = text;
         this.author = author;
         this.target = target;
+        this.reviewID = reviewID; //metto un generatore di ID per le recensioni invece di passarlo come parametro
     }
+
 
     // Getter e Setter
     public int getRating() {
@@ -49,4 +52,11 @@ public abstract class Review {
     public void setTarget(Reviewable target) {
         this.target = target;
     }
+    public int getReviewID() {
+        return reviewID;
+    }
+    public void setReviewID(int reviewID) {
+        this.reviewID = reviewID;
+    }
 }
+

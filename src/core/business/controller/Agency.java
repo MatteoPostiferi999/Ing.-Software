@@ -1,32 +1,33 @@
 package core.business.controller;
 
-import core.business.service.ManageGuidesService;
-import core.business.service.TripService;
-import core.model.Application;
-import core.model.Trip;
-import core.model.Guide;
-
+import core.business.service.*;
+import core.model.*;
 
 public class Agency {
-    private TripService tripService;
-    private ManageGuidesService manageGuideService;
+    private final UserService userService;
+    private final TripService tripService;
+    private final ApplicationService applicationService;
+    private final AssignmentService assignmentService;
 
-    public Agency(TripService tripService, ManageGuidesService manageGuideService) {
+    public Agency(UserService userService,
+                  TripService tripService,
+                  ApplicationService applicationService,
+                  AssignmentService assignmentService) {
+        this.userService = userService;
         this.tripService = tripService;
-        this.manageGuideService = manageGuideService;
+        this.applicationService = applicationService;
+        this.assignmentService = assignmentService;
     }
 
     public void createTrip(Trip trip) {
         tripService.createTrip(trip);
     }
 
-
-    public void deleteTrip(int tripId) {
-        tripService.deleteTrip(tripId);
+    public void reviewApplication(Application application, ApplicationStatus status) {
+        applicationService.reviewApplication(application, status);
     }
 
-
-    public void assignGuideToTrip(Trip trip, Guide guide) {
-        manageGuideService.assignGuideToTrip(guide, trip);
+    public void assignGuide(Assignment assignment) {
+        assignmentService.assignGuide(assignment);
     }
 }

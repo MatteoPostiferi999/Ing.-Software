@@ -15,7 +15,7 @@ public class TravelerFilter implements TripFilterStrategy {
     }
 
     @Override
-    public List<Trip> filterTrips(List<Trip> allTrips) {
+    public List<Trip> filterTrips(List<Trip> allTrips) { // per ora mostra i viaggi per cui c'è posto, ma ancora non applica filtri dinamici
         List<Trip> result = new ArrayList<>();
         for (Trip trip : allTrips) {
             if (trip.getBookingRegister().getBookings().size() < trip.getBookingRegister().getMaxTrav()) {

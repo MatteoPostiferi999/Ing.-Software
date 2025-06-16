@@ -6,8 +6,10 @@ public class Booking {
     private Traveler traveler;
     private Trip trip;
     private Date date;
+    private int bookingId;
 
-    public Booking(Traveler traveler, Trip trip) {
+    public Booking(int bookingId,Traveler traveler, Trip trip) {
+        this.bookingId = bookingId;
         this.traveler = traveler;
         this.trip = trip;
         this.date = new Date();
@@ -38,5 +40,11 @@ public class Booking {
         this.date = date;
     }
 
+    public int getBookingId() {
+        return bookingId;
+    }
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
+    }
     
 }

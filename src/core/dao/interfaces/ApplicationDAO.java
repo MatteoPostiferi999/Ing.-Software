@@ -7,10 +7,11 @@ import core.model.Guide;
 import core.model.Trip;
 
 public interface ApplicationDAO {
-    Application getById(int id);  
-    List<Application> getByTrip(Trip trip);
-    List<Application> getByGuide(Guide guide);
-    void save(Application application);
-    void updateStatus(Application application, ApplicationStatus status);
-    void delete(Application application);
+    void save(Application application); // salva nuova candidatura
+    void updateStatus(Application application, ApplicationStatus status); // aggiorna solo lo status
+    void delete(Application application); // rimuove una candidatura (es. se rifiutata)
+
+    Application getById(int id); // recupera per ID (opzionale ma utile)
+    List<Application> getByTrip(Trip trip); // tutte le candidature per un viaggio
+    List<Application> getByGuide(Guide guide); // tutte le candidature inviate da una guida
 }
