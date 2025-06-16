@@ -4,6 +4,7 @@ import model.application.Application;
 import model.application.ApplicationStatus;
 import model.user.Guide;
 import model.trip.Trip;
+import java.util.List;
 
 
 public interface ApplicationDAO {

@@ -1,8 +1,12 @@
 package business.controller;
 
 import business.service.*;
-import core.business.service.*;
-import core.model.*;
+import business.service.*;
+import model.notification.Notification;
+import model.review.Review;
+import model.trip.Trip;
+import model.user.Traveler;
+
 
 import java.util.List;
 

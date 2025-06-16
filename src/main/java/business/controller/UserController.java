@@ -1,7 +1,7 @@
 package business.controller;
 
 import business.service.UserService;
-import core.model.User;
+import model.user.User;
 
 public class UserController {
     private final UserService userService;

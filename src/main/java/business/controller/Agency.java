@@ -4,8 +4,11 @@ import business.service.ApplicationService;
 import business.service.AssignmentService;
 import business.service.TripService;
 import business.service.UserService;
-import core.business.service.*;
-import core.model.*;
+import business.service.*;
+import model.application.Application;
+import model.application.ApplicationStatus;
+import model.assignment.Assignment;
+import model.trip.Trip;
 
 public class Agency {
     private final UserService userService;
