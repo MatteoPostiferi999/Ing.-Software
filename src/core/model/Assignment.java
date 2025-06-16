@@ -1,40 +1,39 @@
 package core.model;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Assignment {
-    private int guideId;
-    private int tripId;
-    private LocalDate date;
+    private Guide guide;
+    private Trip trip;
+    private Date date;
 
-    public Assignment(int guideId, int tripId, LocalDate date) {
-        this.guideId = guideId;
-        this.tripId = tripId;
-        this.date = date;
+    public Assignment(Guide guide, Trip trip) { // trip e guide passati da fuori perchè c'è composizione
+        this.guide = guide;
+        this.trip = trip;
+        this.date = new Date();
     }
 
-    // Getters e Setters
-    public int getGuideId() {
-        return guideId;
+    public Guide getGuide() {
+        return guide;
     }
 
-    public void setGuideId(int guideId) {
-        this.guideId = guideId;
+    public void setGuide(Guide guide) {
+        this.guide = guide;
     }
 
-    public int getTripId() {
-        return tripId;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public void setTripId(int tripId) {
-        this.tripId = tripId;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

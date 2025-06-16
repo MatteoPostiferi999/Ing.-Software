@@ -3,50 +3,40 @@ package core.model;
 import java.util.Date;
 
 public class Booking {
-    private int travelerId;
-    private int tripId;
-    private int numberOfSlots;
-    private Date bookingDate;
-    private boolean isActive;
+    private Traveler traveler;
+    private Trip trip;
+    private Date date;
 
-    public Booking(int travelerId, int tripId, int numberOfSlots) {
-        this.travelerId = travelerId;
-        this.tripId = tripId;
-        this.numberOfSlots = numberOfSlots;
-        this.bookingDate = new Date();
-        this.isActive = true;
+    public Booking(Traveler traveler, Trip trip) {
+        this.traveler = traveler;
+        this.trip = trip;
+        this.date = new Date();
     }
 
     // Getters and Setters
-    public int getTravelerId() {
-        return travelerId;
+    public Traveler getTraveler() {
+        return traveler;
     }
 
-    public void setTravelerId(int travelerId) {
-        this.travelerId = travelerId;
+    public void setTraveler(Traveler traveler) {
+        this.traveler = traveler;
     }
 
-    public int getTripId() {
-        return tripId;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public void setTripId(int tripId) {
-        this.tripId = tripId;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 
-    public int getNumberOfSlots() {
-        return numberOfSlots;
+    public Date getDate() {
+        return date;
     }
 
-    public void setNumberOfSlots(int numberOfSlots) {
-        this.numberOfSlots = numberOfSlots;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public Date getBookingDate() {
-        return bookingDate;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
+    
 }

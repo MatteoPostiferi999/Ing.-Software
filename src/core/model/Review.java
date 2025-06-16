@@ -1,42 +1,28 @@
 package core.model;
 
 /**
- * Classe astratta che rappresenta una recensione generica tra Traveler e un Reviewable (Trip o Guide), basata su ID.
+ * Classe astratta che rappresenta una recensione tra un Traveler e un Reviewable (Trip o Guide).
+ * Nessuna logica: solo struttura dati.
  */
 public abstract class Review {
-    private int idReview;
-    private int rating;  // da 1 a 5
+    private int rating;
     private String text;
+    private Traveler author;
+    private Reviewable target;
 
-    private int authorId;   // id del Traveler
-    private int targetId;   // id del Reviewable (Trip o Guide)
-
-    public Review(int idReview, int rating, String text, int authorId, int targetId) {
-        this.idReview = idReview;
-        setRating(rating);
+    public Review(int rating, String text, Traveler author, Reviewable target) {
+        this.rating = rating;
         this.text = text;
-        this.authorId = authorId;
-        this.targetId = targetId;
+        this.author = author;
+        this.target = target;
     }
 
-    // Getter e setter
-
-    public int getIdReview() {
-        return idReview;
-    }
-
-    public void setIdReview(int idReview) {
-        this.idReview = idReview;
-    }
-
+    // Getter e Setter
     public int getRating() {
         return rating;
     }
 
     public void setRating(int rating) {
-        if (rating < 1 || rating > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5");
-        }
         this.rating = rating;
     }
 
@@ -48,19 +34,19 @@ public abstract class Review {
         this.text = text;
     }
 
-    public int getAuthorId() {
-        return authorId;
+    public Traveler getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
+    public void setAuthor(Traveler author) {
+        this.author = author;
     }
 
-    public int getTargetId() {
-        return targetId;
+    public Reviewable getTarget() {
+        return target;
     }
 
-    public void setTargetId(int targetId) {
-        this.targetId = targetId;
+    public void setTarget(Reviewable target) {
+        this.target = target;
     }
 }

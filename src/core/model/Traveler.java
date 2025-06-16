@@ -1,35 +1,58 @@
 package core.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Traveler implements Notifiable {
-    private int idTraveller;
-    private List<Notification> notifications = new ArrayList<>();
+    private int travelerId;
+    private NotificationRegister notifications;
+    private User owner;
 
     // Constructor
-    public Traveler(int idTraveller) {
-        this.idTraveller = idTraveller;
+    public Traveler(int travelerId, User owner) {
+        this.travelerId = travelerId;
+        this.notifications = new NotificationRegister();
+        this.owner = owner;
+
     }
 
     // Getters and Setters
-    public int getIdTraveller() {
-        return idTraveller;
+    public int getTravelerId() {
+        return travelerId;
     }
 
-    public void setIdTraveller(int idTraveller) {
-        this.idTraveller = idTraveller;
+    public void setTravelerId(int travelerId) {
+        this.travelerId = travelerId;
     }
 
-    // Notifiable implementation
+    public NotificationRegister getNotificationRegister() {
+        return notifications;
+    }
+
+    public void setNotificationRegister(NotificationRegister notificationRegister) {
+        this.notifications = notificationRegister;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+     public String getUserName() {
+    return owner.getUserName();
+    }
+
+    public String getEmail() {
+        return owner.getEmail();
+    }
+
+    public String getPassword() {
+        return owner.getPassword();
+    }
+
+    // Notifiable interface implementation
     @Override
     public void receiveNotification(Notification notification) {
-        if (notification != null) {
-            notifications.add(notification);
-        }
-    }
-
-    public List<Notification> getNotifications() {
-        return notifications;
+        notifications.addNotification(notification);
     }
 }

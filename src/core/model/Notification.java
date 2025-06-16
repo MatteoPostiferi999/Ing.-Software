@@ -1,47 +1,35 @@
 package core.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Notification {
+    private String text;
+    private Boolean read;
     private Notifiable recipient;
-    private String message;
-    private LocalDateTime timestamp;
-    private boolean read;
 
-    public Notification(Notifiable recipient, String message) {
+    public Notification(String text, Notifiable recipient) {
+        this.text = text;
+        this.read = false; 
         this.recipient = recipient;
-        this.message = message;
-        this.timestamp = LocalDateTime.now();
-        this.read = false;
     }
 
-    // Getter e Setter
+    public String getText() {
+        return text;
+    }
+    public void setText(String text) {
+        this.text = text;
+    }
+    public Boolean isRead() {
+        return read;
+    }
+    public void setRead(Boolean read) {
+        this.read = read;
+    }
 
     public Notifiable getRecipient() {
         return recipient;
     }
-
     public void setRecipient(Notifiable recipient) {
         this.recipient = recipient;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void markAsRead() {
-        this.read = true;
     }
 }

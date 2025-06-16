@@ -1,86 +1,87 @@
 package core.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Guide implements Notifiable, Reviewable {
-    private int idGuide;
-    private List<Skills> skills;
-    private List<Trip> assignedTrips;
-    private double rating;
+    private int guideId;
+    private List<Skill> skills;
 
-    private List<Notification> notifications = new ArrayList<>();
-    private List<Review> reviews = new ArrayList<>();
+    private ReviewRegister reviews;
+    private NotificationRegister notifications;
+    private User owner;
 
     // Constructor
-    public Guide(int idGuide, List<Skills> skills, List<Trip> assignedTrips, double rating) {
-        this.idGuide = idGuide;
+    public Guide(int guideId, List<Skill> skills, double rating, User owner) {
+        this.guideId = guideId;
         this.skills = skills;
-        this.assignedTrips = assignedTrips;
-        this.rating = rating;
+        this.reviews = new ReviewRegister();
+        this.notifications = new NotificationRegister();
+        this.owner = owner; // Associa il proprietario del profilo guida, è un riferimento a User per accedere ai suoi campi, senza possederli
     }
 
     // Getters and Setters
-    public int getIdGuide() {
-        return idGuide;
+    public int getGuideId() {
+        return guideId;
     }
 
-    public void setIdGuide(int idGuide) {
-        this.idGuide = idGuide;
+    public void setGuideId(int guideId) {
+        this.guideId = guideId;
     }
 
-    public List<Skills> getSkills() {
+    public List<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Skills> skills) {
+    public void setSkills(List<Skill> skills) {
         this.skills = skills;
     }
 
-    public List<Trip> getAssignedTrips() {
-        return assignedTrips;
+
+    public ReviewRegister getReviewsRegister() {
+        return reviews;
     }
 
-    public void setAssignedTrips(List<Trip> assignedTrips) {
-        this.assignedTrips = assignedTrips;
+    public void setReviewsRegister(ReviewRegister reviews) {
+        this.reviews = reviews;
     }
 
-    public double getRating() {
-        return rating;
+    public NotificationRegister getNotificationRegister() {
+        return notifications;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public void setNotificationRegister(NotificationRegister notifications) {
+        this.notifications = notifications;
+    }
+
+    public String getUserName() {
+    return owner.getUserName();
+    }
+
+    public String getEmail() {
+        return owner.getEmail();
+    }
+
+    public String getPassword() {
+        return owner.getPassword();
+    }
+    public User getOwner() {
+        return owner;
+    }
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     // Notifiable implementation
     @Override
     public void receiveNotification(Notification notification) {
-        if (notification != null) {
-            notifications.add(notification);
-        }
-    }
-
-    public List<Notification> getNotifications() {
-        return notifications;
+        notifications.addNotification(notification);
     }
 
     // Reviewable implementation
     @Override
     public void addReview(Review review) {
-        if (review != null) {
-            reviews.add(review);
-        }
+        reviews.addReview(review);
     }
 
-    @Override
-    public List<Review> getReviews() {
-        return reviews;
-    }
 
-    @Override
-    public double getAverageRating() {
-        // Logica disabilitata: demandata a ReviewService
-        return 0.0;
-    }
 }

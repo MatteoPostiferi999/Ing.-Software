@@ -2,12 +2,33 @@ package core.dao.impl;
 
 import core.dao.interfaces.ReviewDAO;
 import core.model.Review;
-import java.util.*;
+import core.model.Reviewable;
+import core.model.Traveler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConcreteReviewDAO implements ReviewDAO {
-    public Review getById(int id) { return null; }
-    public List<Review> getByTargetId(int targetId) { return new ArrayList<>(); }
-    public List<Review> getByAuthorId(int authorId) { return new ArrayList<>(); }
-    public void save(Review review) {}
-    public void delete(int id) {}
+    @Override
+    public Review getById(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Review> getByTarget(Reviewable target) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Review> getByAuthor(Traveler author) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void save(Review review) {
+    }
+
+    @Override
+    public void delete(int id) {
+    }
 }

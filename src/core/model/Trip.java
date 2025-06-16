@@ -1,73 +1,42 @@
 package core.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-/**
- * Rappresenta un viaggio con validazioni su attributi critici.
- */
 public class Trip implements Reviewable {
-    private int idTrip;
+    private int tripId;
     private String title;
     private String description;
-    private Skills requiredSkill;
     private double price;
-    private TripStatus tripStatus;
-    private int minTrav;
-    private int maxTrav;
-    private List<Activity> activities;
-    private List<Review> reviews = new ArrayList<>();
+    private Date date;
 
-    public Trip(int idTrip,
-                String title,
-                String description,
-                Skills requiredSkill,
-                double price,
-                TripStatus tripStatus,
-                int minTrav,
-                int maxTrav,
-                List<Activity> activities) {
-        if (title == null || title.isEmpty()) {
-            throw new IllegalArgumentException("Title cannot be null or empty");
-        }
-        if (description == null || description.isEmpty()) {
-            throw new IllegalArgumentException("Description cannot be null or empty");
-        }
-        if (requiredSkill == null) {
-            throw new IllegalArgumentException("Required skill cannot be null");
-        }
-        if (tripStatus == null) {
-            throw new IllegalArgumentException("Trip status cannot be null");
-        }
-        if (price < 0) {
-            throw new IllegalArgumentException("Price cannot be negative");
-        }
-        if (minTrav < 0 || maxTrav < minTrav) {
-            throw new IllegalArgumentException("Invalid travellers range: minTrav must be >= 0 and <= maxTrav");
-        }
-        if (activities == null) {
-            throw new IllegalArgumentException("Activities list cannot be null");
-        }
+    private List<Skill> requiredSkills;
+    private List<Activity> plannedActivities;
+    private ReviewRegister reviews;
+    private BookingRegister bookings;
+    private AssignmentRegister assignedGuides;
 
-        this.idTrip = idTrip;
+    public Trip(int tripId, String title, String description, double price, Date date, int minTrav, int maxTrav, int maxGuides) {
+        this.tripId = tripId;
         this.title = title;
         this.description = description;
-        this.requiredSkill = requiredSkill;
         this.price = price;
-        this.tripStatus = tripStatus;
-        this.minTrav = minTrav;
-        this.maxTrav = maxTrav;
-        this.activities = activities;
+        this.date = date;
+        this.requiredSkills = new ArrayList<>();
+        this.plannedActivities = new ArrayList<>();
+        this.reviews = new ReviewRegister();
+        this.bookings = new BookingRegister(minTrav, maxTrav); 
+        this.assignedGuides = new AssignmentRegister(maxGuides);
     }
 
-    // Getters e setters
-
-    public int getIdTrip() {
-        return idTrip;
+    // Getters & Setters
+    public int getTripId() {
+        return tripId;
     }
 
-    public void setIdTrip(int idTrip) {
-        this.idTrip = idTrip;
+    public void setTripId(int tripId) {
+        this.tripId = tripId;
     }
 
     public String getTitle() {
@@ -75,9 +44,6 @@ public class Trip implements Reviewable {
     }
 
     public void setTitle(String title) {
-        if (title == null || title.isEmpty()) {
-            throw new IllegalArgumentException("Title cannot be null or empty");
-        }
         this.title = title;
     }
 
@@ -86,21 +52,7 @@ public class Trip implements Reviewable {
     }
 
     public void setDescription(String description) {
-        if (description == null || description.isEmpty()) {
-            throw new IllegalArgumentException("Description cannot be null or empty");
-        }
         this.description = description;
-    }
-
-    public Skills getRequiredSkill() {
-        return requiredSkill;
-    }
-
-    public void setRequiredSkill(Skills requiredSkill) {
-        if (requiredSkill == null) {
-            throw new IllegalArgumentException("Required skill cannot be null");
-        }
-        this.requiredSkill = requiredSkill;
     }
 
     public double getPrice() {
@@ -108,72 +60,61 @@ public class Trip implements Reviewable {
     }
 
     public void setPrice(double price) {
-        if (price < 0) {
-            throw new IllegalArgumentException("Price cannot be negative");
-        }
         this.price = price;
     }
 
-    public TripStatus getTripStatus() {
-        return tripStatus;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTripStatus(TripStatus tripStatus) {
-        if (tripStatus == null) {
-            throw new IllegalArgumentException("Trip status cannot be null");
-        }
-        this.tripStatus = tripStatus;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public int getMinTrav() {
-        return minTrav;
+    public List<Skill> getRequiredSkills() {
+        return requiredSkills;
     }
 
-    public void setMinTrav(int minTrav) {
-        if (minTrav < 0 || minTrav > this.maxTrav) {
-            throw new IllegalArgumentException("minTrav must be >= 0 and <= maxTrav");
-        }
-        this.minTrav = minTrav;
+    public void setRequiredSkills(List<Skill> requiredSkills) {
+        this.requiredSkills = requiredSkills;
     }
 
-    public int getMaxTrav() {
-        return maxTrav;
+    public List<Activity> getPlannedActivities() {
+        return plannedActivities;
     }
 
-    public void setMaxTrav(int maxTrav) {
-        if (maxTrav < this.minTrav) {
-            throw new IllegalArgumentException("maxTrav must be >= minTrav");
-        }
-        this.maxTrav = maxTrav;
+    public void setPlannedActivities(List<Activity> plannedActivities) {
+        this.plannedActivities = plannedActivities;
     }
 
-    public List<Activity> getActivities() {
-        return activities;
+
+    public void setReviews(ReviewRegister reviews) {
+        this.reviews = reviews;
     }
 
-    public void setActivities(List<Activity> activities) {
-        if (activities == null) {
-            throw new IllegalArgumentException("Activities list cannot be null");
-        }
-        this.activities = activities;
+    public BookingRegister getBookingRegister() {
+        return bookings;
     }
 
-    // Metodi richiesti da Reviewable (senza logica)
-    @Override
-    public List<Review> getReviews() {
-        return reviews;
+    public void setBookingRegister(BookingRegister bookings) {
+        this.bookings = bookings;
     }
+
+    public AssignmentRegister getAssignmentRegister() {
+        return assignedGuides;
+    }
+
+    public void setAssignmentRegister(AssignmentRegister assignedGuides) {
+        this.assignedGuides = assignedGuides;
+    }
+
+
+    // Reviewable implementation
 
     @Override
     public void addReview(Review review) {
-        if (review != null) {
-            this.reviews.add(review);
-        }
+        reviews.addReview(review);
     }
 
-    @Override
-    public double getAverageRating() {
-        // Nessuna logica: implementazione vuota o da ignorare
-        return 0.0; // verrà gestita da ReviewService
-    }
+
 }

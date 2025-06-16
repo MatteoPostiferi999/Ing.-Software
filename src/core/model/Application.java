@@ -1,55 +1,36 @@
 package core.model;
 
-/**
- * Rappresenta la candidatura di una Guide per un Trip, utilizzando ID anziché riferimenti diretti.
- */
 public class Application {
-    private int idApplication;
-    private int guideId;
-    private int tripId;
-    private String cv;
+    private int applicationId;
+    private String CV;
     private ApplicationStatus status;
 
-    public Application(int idApplication, int guideId, int tripId, String cv, ApplicationStatus status) {
-        this.idApplication = idApplication;
-        this.guideId = guideId;
-        this.tripId = tripId;
-        this.cv = cv;
-        this.status = status;
+    private Guide guide;
+    private Trip trip;
+
+    public Application(int applicationId, String CV, Guide guide, Trip trip) {
+        this.applicationId = applicationId;
+        this.CV = CV;
+        this.guide = guide;
+        this.trip = trip;
+        this.status = ApplicationStatus.PENDING; 
     }
 
     // Getters & Setters
-
-    public int getIdApplication() {
-        return idApplication;
+    public int getApplicationId() {
+        return applicationId;
     }
 
-    public void setIdApplication(int idApplication) {
-        this.idApplication = idApplication;
+    public void setApplicationId(int applicationId) {
+        this.applicationId = applicationId;
     }
 
-    public int getGuideId() {
-        return guideId;
+    public String getCV() {
+        return CV;
     }
 
-    public void setGuideId(int guideId) {
-        this.guideId = guideId;
-    }
-
-    public int getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(int tripId) {
-        this.tripId = tripId;
-    }
-
-    public String getCv() {
-        return cv;
-    }
-
-    public void setCv(String cv) {
-        this.cv = cv;
+    public void setCV(String CV) {
+        this.CV = CV;
     }
 
     public ApplicationStatus getStatus() {
@@ -58,5 +39,21 @@ public class Application {
 
     public void setStatus(ApplicationStatus status) {
         this.status = status;
+    }
+
+    public Guide getGuide() {
+        return guide;
+    }
+
+    public void setGuide(Guide guide) {
+        this.guide = guide;
+    }
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 }
