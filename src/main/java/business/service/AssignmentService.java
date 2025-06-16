@@ -1,8 +1,8 @@
 package business.service;
 
 import dao.interfaces.AssignmentDAO;
-import core.model.Assignment;
-import core.model.Trip;
+import model.assignment.Assignment;
+import model.trip.Trip;
 
 public class AssignmentService {
     private final AssignmentDAO assignmentDAO;

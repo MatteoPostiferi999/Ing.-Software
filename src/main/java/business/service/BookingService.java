@@ -1,10 +1,10 @@
 package business.service;
 
 import dao.interfaces.BookingDAO;
-import core.model.Booking;
-import core.model.BookingRegister;
-import core.model.Traveler;
-import core.model.Trip;
+import model.booking.Booking;
+import model.booking.BookingRegister;
+import model.user.Traveler;
+import model.trip.Trip;
 
 public class BookingService {
     private final BookingRegister bookingRegister;

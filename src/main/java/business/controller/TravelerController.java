@@ -1,7 +1,6 @@
 package business.controller;
 
 import business.service.*;
-import business.service.*;
 import model.notification.Notification;
 import model.review.Review;
 import model.trip.Trip;
