@@ -1,12 +1,13 @@
 package business.service;
 
 import model.trip.Trip;
-import model.assignment.AssignmentRegister;
 import model.assignment.Assignment;
 import model.user.Guide;
 import model.application.Application;
 import model.application.ApplicationRegister;
 import dao.interfaces.AssignmentDAO;
+import business.service.NotificationService;
+import model.notification.Notification;
 
 import java.util.Comparator;
 import java.util.List;
@@ -15,10 +16,12 @@ public class AssignmentService {
 
     private final ApplicationRegister applicationRegister;
     private final AssignmentDAO assignmentDAO;
+    private final NotificationService notificationService;
 
-    public AssignmentService(ApplicationRegister applicationRegister, AssignmentDAO assignmentDAO) {
+    public AssignmentService(ApplicationRegister applicationRegister, AssignmentDAO assignmentDAO, NotificationService notificationService) {
         this.applicationRegister = applicationRegister;
         this.assignmentDAO = assignmentDAO;
+        this.notificationService = notificationService;
     }
 
     public void assignBestGuidesToTrip(Trip trip) {
@@ -38,6 +41,17 @@ public class AssignmentService {
                 Assignment assignment = new Assignment(guide, trip);
                 trip.getAssignmentRegister().addAssignment(assignment);
                 assignmentDAO.save(assignment);
+
+                notificationService.sendNotification(guide, "You have been assigned to the trip: " + trip.getTitle());
             });
+
+        if (trip.getAssignmentRegister().getAssignments().size() == trip.getMaxGuides()) {
+            trip.getBookingRegister().getBookings().forEach(booking -> {
+                notificationService.sendNotification(
+                    booking.getTraveler(),
+                    "The guides for your trip \"" + trip.getTitle() + "\" have been assigned and are now complete."
+                );
+            });
+        }
     }
 }

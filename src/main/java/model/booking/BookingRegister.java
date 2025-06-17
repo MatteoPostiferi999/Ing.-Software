@@ -1,5 +1,7 @@
 package model.booking;
 
+import model.user.Traveler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,4 +57,25 @@ public class BookingRegister {
         bookings.remove(booking);
     }
 
+    public int getAvailableSpots() {
+        return maxTrav - bookings.size();
+    }
+
+    public boolean hasBooking(Traveler traveler) {
+        for (Booking booking : bookings) {
+            if (booking.getTraveler().equals(traveler)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Booking getBookingByTraveler(Traveler traveler) {
+    for (Booking booking : bookings) {
+        if (booking.getTraveler().equals(traveler)) {
+            return booking;
+        }
+    }
+    return null;
+    }
 }

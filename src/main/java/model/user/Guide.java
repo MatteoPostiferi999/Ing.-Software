@@ -61,10 +61,6 @@ public class Guide implements Notifiable, Reviewable {
         this.reviews = reviews;
     }
 
-    public NotificationRegister getNotificationRegister() {
-        return notifications;
-    }
-
     public void setNotificationRegister(NotificationRegister notifications) {
         this.notifications = notifications;
     }
@@ -93,14 +89,25 @@ public class Guide implements Notifiable, Reviewable {
         notifications.addNotification(notification);
     }
 
+    @Override
+    public NotificationRegister getNotificationRegister() {
+        return notifications;
+    }
+
     // Reviewable implementation
     @Override
     public void addReview(Review review) {
         reviews.addReview(review);
     }
 
+    public ReviewRegister getReviewRegister() {
+        return reviews;
+    }
+
 
     public double getRating() {
         return reviews.getAverageRating();
     }
+
+
 }

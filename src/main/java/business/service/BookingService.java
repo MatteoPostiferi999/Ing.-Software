@@ -1,30 +1,44 @@
 package business.service;
-
 import dao.interfaces.BookingDAO;
+
+import model.trip.Trip;
+import model.user.Traveler;
 import model.booking.Booking;
 import model.booking.BookingRegister;
-import model.user.Traveler;
-import model.trip.Trip;
+
+import java.util.List;
 
 public class BookingService {
-    private final BookingRegister bookingRegister;
-    private final BookingDAO bookingDAO;
 
-    public BookingService(BookingRegister register, BookingDAO dao) {
-        this.bookingRegister = register;
-        this.bookingDAO = dao;
+    private BookingDAO bookingDAO;
+
+    public BookingService(BookingDAO bookingDAO) {
+        this.bookingDAO = bookingDAO;
     }
 
-    // Metodo per aggiungere una prenotazione
-    public void bookTrip(int bookingId, Traveler traveler, Trip trip) {
-        Booking booking = new Booking(bookingId, traveler, trip);
-        bookingRegister.addBooking(booking); // gestione runtime
-        bookingDAO.save(booking);            // persistenza DB
+    public boolean bookTrip(Traveler traveler, Trip trip) {
+        BookingRegister register = trip.getBookingRegister();
+        if (register.getAvailableSpots() > 0 && !register.hasBooking(traveler)) {
+            Booking booking = new Booking(traveler, trip);
+            register.addBooking(booking);
+            bookingDAO.save(booking);
+            return true;
+        }
+        return false;
     }
 
-    // Metodo per rimuovere una prenotazione
-    public void cancelBooking(Booking booking) {
-        bookingRegister.removeBooking(booking); // aggiornamento in-app
-        bookingDAO.delete(booking);             // rimozione dal DB
+    public boolean cancelBooking(Traveler traveler, Trip trip) {
+        BookingRegister register = trip.getBookingRegister();
+        Booking booking = register.getBookingByTraveler(traveler);
+        if (booking != null) {
+            register.removeBooking(booking);
+            bookingDAO.delete(booking);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Booking> getBookingsForTrip(Trip trip) {
+        return trip.getBookingRegister().getBookings();
     }
 }

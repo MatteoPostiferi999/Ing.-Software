@@ -1,62 +1,36 @@
 package business.service;
 
-import java.util.List;
-
-import dao.interfaces.NotificationDAO;
 import model.notification.Notification;
 import model.notification.Notifiable;
+import dao.interfaces.NotificationDAO;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NotificationService {
-    private final NotificationDAO notificationDAO;
 
-    public NotificationService(NotificationDAO dao) {
-        this.notificationDAO = dao;
+    private NotificationDAO notificationDAO;
+
+    public NotificationService() {
     }
 
-    // Invia una notifica a un destinatario (Guide o Traveler)
-    public void sendNotification(Notification notification, Notifiable receiver) {
-        receiver.receiveNotification(notification);         // in-app
-        notificationDAO.save(notification);                 // persistente
+    public NotificationService(NotificationDAO notificationDAO) {
+        this.notificationDAO = notificationDAO;
     }
 
-    // Marca una notifica come letta
-    public void readNotification(Notification notification) {
-        notification.setRead(true);                         // modifica in-app
-        notificationDAO.update(notification);               // aggiorna nel DB
+    public void sendNotification(Notifiable recipient, String message) {
+        Notification notification = new Notification (message, recipient);
+        recipient.getNotificationRegister().addNotification(notification);
+        notificationDAO.save(notification);
     }
 
-        /**
-     * Restituisce tutte le notifiche ricevute da un utente (Guide o Traveler),
-     * senza modificarne lo stato (letto/non letto).
-     */
-    public List<Notification> getAllNotifications(Notifiable target) {
-        return target.getNotificationRegister().getNotifications();
-
-    
+    public List<Notification> getUnreadNotifications(Notifiable recipient) {
+        return recipient.getNotificationRegister().getNotifications().stream()
+                .filter(n -> !n.isRead())
+                .collect(Collectors.toList());
     }
 
-        /**
-     * Segna una singola notifica come letta, aggiornando sia lo stato
-     * in memoria che nel database.
-     */
-    public void markNotificationAsRead(Notification notification) {
-        notification.setRead(true);
+    public void markAsRead(Notification notification) {
+        notification.markAsRead();
         notificationDAO.update(notification);
     }
-
-        /**
-     * Segna come lette tutte le notifiche ricevute da un utente,
-     * aggiornando anche il database.
-     */
-    public void markAllAsRead(Notifiable target) {
-        List<Notification> list = target.getNotificationRegister().getNotifications();
-        for (Notification n : list) {
-            if (!n.isRead()) {
-                n.setRead(true);
-                notificationDAO.update(n);
-            }
-        }
-    }
-
-
 }

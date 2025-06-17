@@ -144,6 +144,10 @@ public class Trip implements Reviewable {
         reviews.addReview(review);
     }
 
+    public ReviewRegister getReviewRegister() {
+        return reviews;
+    }
+
 
     public int getMaxGuides() {
         return assignedGuides.getMaxGuides();

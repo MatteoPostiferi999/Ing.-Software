@@ -47,4 +47,8 @@ public class Notification {
         this.id = id;
     }
 
+    public void markAsRead() {
+        this.read = true;
+    }
+
 }

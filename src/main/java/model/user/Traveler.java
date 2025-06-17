@@ -32,10 +32,6 @@ public class Traveler implements Notifiable {
         this.travelerId = travelerId;
     }
 
-    public NotificationRegister getNotificationRegister() {
-        return notifications;
-    }
-
     public void setNotificationRegister(NotificationRegister notificationRegister) {
         this.notifications = notificationRegister;
     }
@@ -64,5 +60,10 @@ public class Traveler implements Notifiable {
     @Override
     public void receiveNotification(Notification notification) {
         notifications.addNotification(notification);
+    }
+
+    @Override
+    public NotificationRegister getNotificationRegister() {
+        return notifications;
     }
 }
