@@ -7,7 +7,14 @@ public class AssignmentRegister {
     private List<Assignment> assignments = new ArrayList<>();
     private int maxGuides;
 
+    // Constructor for new register
     public AssignmentRegister(int maxGuides) {
+        this.maxGuides = maxGuides;
+    }
+
+    // Constructor for reconstruction from DB
+    public AssignmentRegister(List<Assignment> assignments, int maxGuides) {
+        this.assignments = assignments;
         this.maxGuides = maxGuides;
     }
 

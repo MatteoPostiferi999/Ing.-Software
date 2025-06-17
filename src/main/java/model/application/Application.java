@@ -11,12 +11,22 @@ public class Application {
     private Guide guide;
     private Trip trip;
 
-    public Application(int applicationId, String CV, Guide guide, Trip trip) {
+    // Constructor for new Application (ID will be assigned by the database)
+    public Application(String CV, Guide guide, Trip trip) {
+        this.applicationId = 0; // will be set by DB
+        this.CV = CV;
+        this.guide = guide;
+        this.trip = trip;
+        this.status = ApplicationStatus.PENDING;
+    }
+
+    // Constructor for reconstructing Application from DB
+    public Application(int applicationId, String CV, Guide guide, Trip trip, ApplicationStatus status) {
         this.applicationId = applicationId;
         this.CV = CV;
         this.guide = guide;
         this.trip = trip;
-        this.status = ApplicationStatus.PENDING; 
+        this.status = status;
     }
 
     // Getters & Setters

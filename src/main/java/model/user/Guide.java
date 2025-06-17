@@ -17,21 +17,22 @@ public class Guide implements Notifiable, Reviewable {
     private NotificationRegister notifications;
     private User owner;
 
-    // Constructor
-    public Guide(int guideId, List<Skill> skills, double rating, User owner) {
-        this.guideId = guideId;
-        this.skills = skills;
+    // Constructor for new Guide (created from scratch)
+    public Guide(User owner) {
+        this.guideId = 0;
+        this.skills = null;
+        this.owner = owner;
         this.reviews = new ReviewRegister();
         this.notifications = new NotificationRegister();
-        this.owner = owner; // Associa il proprietario del profilo guida, è un riferimento a User per accedere ai suoi campi, senza possederli
     }
 
-    public Guide(User owner) {
+    // Constructor for Guide reconstructed from database
+    public Guide(int guideId, List<Skill> skills, User owner, ReviewRegister reviews, NotificationRegister notifications) {
+        this.guideId = guideId;
+        this.skills = skills;
         this.owner = owner;
-        this.guideId = 0; // Default value, can be set later
-        this.skills = null; // Default value, can be set later
-        this.reviews = new ReviewRegister();
-        this.notifications = new NotificationRegister();
+        this.reviews = reviews;
+        this.notifications = notifications;
     }
 
     // Getters and Setters

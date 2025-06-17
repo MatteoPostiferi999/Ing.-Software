@@ -9,6 +9,13 @@ public class BookingRegister {
     private int maxTrav;
     //private int tripId;
 
+    // Constructor for reconstruction from database
+    public BookingRegister(List<Booking> bookings, int minTrav, int maxTrav) {
+        this.bookings = bookings;
+        this.minTrav = minTrav;
+        this.maxTrav = maxTrav;
+    }
+
     public BookingRegister(int minTrav, int maxTrav) {
         this.minTrav = minTrav;
         this.maxTrav = maxTrav;

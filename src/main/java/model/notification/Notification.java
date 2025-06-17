@@ -1,14 +1,23 @@
 package model.notification;
 
 public class Notification {
+    private int id;
     private String text;
-    private Boolean read;
     private Notifiable recipient;
+    private Boolean read;
 
     public Notification(String text, Notifiable recipient) {
+        this.id = 0; // Default ID, will be assigned by the database
         this.text = text;
         this.read = false; 
         this.recipient = recipient;
+    }
+
+    public Notification(int id, String text, Notifiable recipient, Boolean read) {
+        this.id = id;
+        this.text = text;
+        this.recipient = recipient;
+        this.read = read;
     }
 
     public String getText() {

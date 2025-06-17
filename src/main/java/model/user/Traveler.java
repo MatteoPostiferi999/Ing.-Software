@@ -9,17 +9,17 @@ public class Traveler implements Notifiable {
     private NotificationRegister notifications;
     private User owner;
 
-    // Constructor
-    public Traveler(int travelerId, User owner) {
+    // Costruttore per oggetti recuperati dal database
+    public Traveler(int travelerId, User owner, NotificationRegister notifications) {
         this.travelerId = travelerId;
-        this.notifications = new NotificationRegister();
         this.owner = owner;
-
+        this.notifications = notifications;
     }
 
+    // Costruttore per la creazione iniziale (senza ID, ID verrà assegnato dal DB)
     public Traveler(User owner) {
         this.owner = owner;
-        this.travelerId = 0; // Default value, can be set later
+        this.travelerId = 0; // Valore predefinito, verrà assegnato dal DB
         this.notifications = new NotificationRegister();
     }
 

@@ -13,19 +13,22 @@ public class User {
     private Guide guideProfile;
     private Traveler travelerProfile;
 
-    public User() {
+    public User(String userName, String email, String password) {
+        this.userId = 0; // Default userId, will be set by the database
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
         this.guideProfile = new Guide(this);
         this.travelerProfile = new Traveler(this);
     }
 
-    public User(int userId, String userName, String email, String password) {
+    public User(int userId, String userName, String email, String password, Guide guideProfile, Traveler travelerProfile) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
         this.password = password;
-
-        this.guideProfile = new Guide(this);
-        this.travelerProfile = new Traveler(this);
+        this.guideProfile = guideProfile;
+        this.travelerProfile = travelerProfile;
     }
 
     // Getter e Setter

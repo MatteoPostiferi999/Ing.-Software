@@ -6,6 +6,7 @@ import model.review.Review;
 import model.review.ReviewRegister;
 import model.review.Reviewable;
 import model.user.Skill;
+import model.application.ApplicationRegister;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,22 @@ public class Trip implements Reviewable {
     private ReviewRegister reviews;
     private BookingRegister bookings;
     private AssignmentRegister assignedGuides;
+    private ApplicationRegister applicationRegister;
+
+    // Constructor for new Trip (ID will be assigned by the database)
+    public Trip(String title, String description, double price, Date date, int minTrav, int maxTrav, int maxGuides) {
+        this.tripId = 0; // will be set by DB
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.date = date;
+        this.requiredSkills = new ArrayList<>();
+        this.plannedActivities = new ArrayList<>();
+        this.reviews = new ReviewRegister();
+        this.bookings = new BookingRegister(minTrav, maxTrav);
+        this.assignedGuides = new AssignmentRegister(maxGuides);
+        this.applicationRegister = new ApplicationRegister();
+    }
 
     public Trip(int tripId, String title, String description, double price, Date date, int minTrav, int maxTrav, int maxGuides) {
         this.tripId = tripId;
@@ -33,8 +50,9 @@ public class Trip implements Reviewable {
         this.requiredSkills = new ArrayList<>();
         this.plannedActivities = new ArrayList<>();
         this.reviews = new ReviewRegister();
-        this.bookings = new BookingRegister(minTrav, maxTrav); 
+        this.bookings = new BookingRegister(minTrav, maxTrav);
         this.assignedGuides = new AssignmentRegister(maxGuides);
+        this.applicationRegister = new ApplicationRegister();
     }
 
     // Getters & Setters
@@ -115,6 +133,9 @@ public class Trip implements Reviewable {
         this.assignedGuides = assignedGuides;
     }
 
+    public model.application.ApplicationRegister getApplicationRegister() {
+        return applicationRegister;
+    }
 
     // Reviewable implementation
 

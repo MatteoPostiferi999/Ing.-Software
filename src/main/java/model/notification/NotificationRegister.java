@@ -14,14 +14,23 @@ public class NotificationRegister {
     public NotificationRegister() {
     }
 
+    // Constructor for reconstruction from database
+    public NotificationRegister(List<Notification> notifications, int numUnread) {
+        this.notifications = notifications;
+        this.numUnread = numUnread;
+    }
+
     public void addNotification(Notification notification) {
         notifications.add(notification);
-        numUnread++; // tolgo?
+        if (!notification.isRead()) {
+            numUnread++;
+        }
     }
 
     public void removeNotification(Notification notification) {
-        if (notifications.remove(notification)) {
-            numUnread--; // qui o nel service?
+        notifications.remove(notification);
+        if (!notification.isRead()) {
+            numUnread--;
         }
     }
 

@@ -11,11 +11,19 @@ public class Booking {
     private Date date;
     private int bookingId;
 
-    public Booking(int bookingId,Traveler traveler, Trip trip) {
-        this.bookingId = bookingId;
+    // Constructor for creating a new booking (ID will be assigned by the database)
+    public Booking(Traveler traveler, Trip trip) {
+        this.bookingId = 0; // Will be assigned by DB
         this.traveler = traveler;
         this.trip = trip;
         this.date = new Date();
+    }
+
+    public Booking(int bookingId, Traveler traveler, Trip trip, Date date) {
+        this.bookingId = bookingId;
+        this.traveler = traveler;
+        this.trip = trip;
+        this.date = date;
     }
 
     // Getters and Setters

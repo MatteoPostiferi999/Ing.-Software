@@ -3,30 +3,23 @@ package model.application;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Registro delle candidature effettuate dalle guide per i viaggi.
- * Mapper: Trip x Guide
- */
 public class ApplicationRegister {
-    private List<Application> applications = new ArrayList<>();
-    //private int tripId; 
+    private List<Application> applications;
 
-    public ApplicationRegister(int tripId) {
-        //this.tripId = tripId;
+    // Constructor for new empty register
+    public ApplicationRegister() {
+        this.applications = new ArrayList<>();
     }
 
-
-    public void addApplication(Application application) {
-        applications.add(application);
+    // Constructor for reconstruction from database
+    public ApplicationRegister(List<Application> applications) {
+        this.applications = applications;
     }
 
-    public void removeApplication(Application application) {
-        applications.remove(application);
-    }
-
-    public List<Application> getAllApplications() {
+    // Getter
+    public List<Application> getApplications() {
         return applications;
     }
 
-    
+    // Other utility methods if needed (e.g., addApplication, removeApplication, etc.)
 }
