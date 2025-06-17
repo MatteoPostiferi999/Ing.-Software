@@ -1,45 +1,36 @@
 package business.service;
 
 import model.application.Application;
-import model.application.ApplicationStatus;
 import model.user.Guide;
 import model.trip.Trip;
-import model.assignment.Assignment;
 import dao.interfaces.ApplicationDAO;
 import model.application.ApplicationRegister;
+import java.util.Comparator;
+import java.util.List;
 
 public class ApplicationService {
-    private final ApplicationRegister applicationRegister;
     private final ApplicationDAO applicationDAO;
+    private final ApplicationRegister applicationRegister;
 
-    public ApplicationService(ApplicationRegister register, ApplicationDAO dao) {
-        this.applicationRegister = register;
-        this.applicationDAO = dao;
+    public ApplicationService(ApplicationDAO applicationDAO, ApplicationRegister applicationRegister) {
+        this.applicationDAO = applicationDAO;
+        this.applicationRegister = applicationRegister;
     }
 
-    // Invio candidatura
-    public void sendApplication(int applicationId, String cv, Guide guide, Trip trip) {
-        Application application = new Application(applicationId, cv, guide, trip);
-        applicationRegister.addApplication(application); // logica interna
-        applicationDAO.save(application);                // persistenza
+    public void sendApplication(String cv, Guide guide, Trip trip) {
+        Application application = new Application(cv, guide, trip); // ID will be assigned by DB
+        applicationRegister.addApplication(application);             // internal logic
+        applicationDAO.save(application);                            // persistence
     }
 
-    // Revisione della candidatura (accetta o rifiuta)
-    public void reviewApplication(Application application, ApplicationStatus newStatus) {
-        application.setStatus(newStatus);
-
-        if (newStatus == ApplicationStatus.ACCEPTED) {
-            // Assegna la guida al viaggio
-            Assignment assignment = new Assignment(application.getGuide(), application.getTrip());
-            application.getTrip().getAssignmentRegister().addAssignment(assignment);
-        } else if (newStatus == ApplicationStatus.REJECTED) {
-            // Rimuovi la candidatura solo dal register (non dal DB se serve traccia storica)
-            applicationRegister.removeApplication(application);
-            applicationDAO.delete(application); // rimuovi dal DB
+    public void updateApplicationStatus(Application application, boolean accepted) {
+        if (accepted) {
+            application.accept();
+        } else {
+            application.reject();
         }
-
-        applicationDAO.update(application); // aggiorna stato nel DB (accepted o rejected)
+        applicationDAO.update(application); // update status in DB
     }
+
+
 }
-
-

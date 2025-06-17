@@ -69,4 +69,20 @@ public class Application {
     public void setTrip(Trip trip) {
         this.trip = trip;
     }
+
+    public void accept() {
+        if (this.status == ApplicationStatus.PENDING) {
+            this.status = ApplicationStatus.ACCEPTED;
+        } else {
+            throw new IllegalStateException("Cannot accept an application that is not pending.");
+        }
+    }
+
+    public void reject() {
+        if (this.status == ApplicationStatus.PENDING) {
+            this.status = ApplicationStatus.REJECTED;
+        } else {
+            throw new IllegalStateException("Cannot reject an application that is not pending.");
+        }
+    }
 }

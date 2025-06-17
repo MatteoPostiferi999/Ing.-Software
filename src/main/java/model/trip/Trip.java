@@ -145,4 +145,7 @@ public class Trip implements Reviewable {
     }
 
 
+    public int getMaxGuides() {
+        return assignedGuides.getMaxGuides();
+    }
 }

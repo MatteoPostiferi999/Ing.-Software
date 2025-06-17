@@ -100,4 +100,7 @@ public class Guide implements Notifiable, Reviewable {
     }
 
 
+    public double getRating() {
+        return reviews.getAverageRating();
+    }
 }
