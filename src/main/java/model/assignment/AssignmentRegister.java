@@ -41,4 +41,8 @@ public class AssignmentRegister {
     public void removeAssignment(Assignment assignment) {
         assignments.remove(assignment);
     }
+
+    public List<Assignment> getAllAssignments() {
+        return new ArrayList<>(assignments);
+    }
 }

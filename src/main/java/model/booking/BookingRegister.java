@@ -9,7 +9,6 @@ public class BookingRegister {
     private List<Booking> bookings = new ArrayList<>();
     private int minTrav;
     private int maxTrav;
-    //private int tripId;
 
     // Constructor for reconstruction from database
     public BookingRegister(List<Booking> bookings, int minTrav, int maxTrav) {
@@ -77,5 +76,9 @@ public class BookingRegister {
         }
     }
     return null;
+    }
+
+    public List<Booking> getAllBookings() {
+        return new ArrayList<>(bookings);
     }
 }

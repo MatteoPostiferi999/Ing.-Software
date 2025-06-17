@@ -1,24 +1,33 @@
 package business.service;
 
-import dao.interfaces.UserDAO;
+import business.dao.UserDAO;
 import model.user.User;
 
 public class UserService {
+
     private final UserDAO userDAO;
 
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
-    public void registerUser(User user) {
+    public boolean register(User user) {
+        if (emailExists(user.getEmail())) {
+            return false;
+        }
         userDAO.save(user);
+        return true;
     }
 
     public User login(String email, String password) {
-        User user = userDAO.getByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
+        User user = userDAO.findByEmailAndPassword(email, password);
+        if (user == null) {
+            return null;
         }
-        return null; // oppure Optional<User> o eccezione custom
+        return user;
+    }
+
+    private boolean emailExists(String email) {
+        return userDAO.findByEmail(email) != null;
     }
 }

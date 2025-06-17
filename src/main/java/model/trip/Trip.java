@@ -152,4 +152,8 @@ public class Trip implements Reviewable {
     public int getMaxGuides() {
         return assignedGuides.getMaxGuides();
     }
+
+    public boolean isAlreadyStarted() {
+        return date.isBefore(LocalDate.now());
+    }
 }

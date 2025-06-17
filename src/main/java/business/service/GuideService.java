@@ -2,7 +2,6 @@ package business.service;
 
 import dao.interfaces.GuideDAO;
 import model.user.Guide;
-import model.user.User;
 
 public class GuideService {
     private final GuideDAO guideDAO;
@@ -11,13 +10,19 @@ public class GuideService {
         this.guideDAO = guideDAO;
     }
 
-    // Modifica del profilo della Guida
-    public void editProfile(Guide guide, String newUserName, String newEmail, String newPassword) {
-        User owner = guide.getOwner();
-        owner.setUserName(newUserName);
-        owner.setEmail(newEmail);
-        owner.setPassword(newPassword);
+    public void addGuide(Guide guide) {
+        guideDAO.save(guide);
+    }
 
-        guideDAO.update(guide); // Persisti le modifiche nel database
+    public Guide getGuideById(int id) {
+        return guideDAO.findById(id);
+    }
+
+    public void updateGuide(Guide guide) {
+        guideDAO.update(guide);
+    }
+
+    public void deleteGuide(int id) {
+        guideDAO.delete(id);
     }
 }

@@ -11,13 +11,19 @@ public class TravelerService {
         this.travelerDAO = travelerDAO;
     }
 
-    // Modifica del profilo del Traveler
-    public void editProfile(Traveler traveler, String newUserName, String newEmail, String newPassword) {
-        User owner = traveler.getOwner();
-        owner.setUserName(newUserName);
-        owner.setEmail(newEmail);
-        owner.setPassword(newPassword);
+    public void addTraveler(Traveler traveler) {
+        travelerDAO.save(traveler);
+    }
 
-        travelerDAO.update(traveler); // Persisti le modifiche nel database
+    public Traveler getTravelerById(int id) {
+        return travelerDAO.findById(id);
+    }
+
+    public void updateTraveler(Traveler traveler) {
+        travelerDAO.update(traveler);
+    }
+
+    public void deleteTraveler(int id) {
+        travelerDAO.delete(id);
     }
 }
