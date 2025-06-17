@@ -4,19 +4,34 @@ import model.user.Guide;
 import model.trip.Trip;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 public class GuideFilter implements TripFilterStrategy {
-    private Guide guide;
+    private final Guide guide;
+    private LocalDate minDate;
+    private LocalDate maxDate;
 
     public GuideFilter(Guide guide) {
         this.guide = guide;
+    }
+
+    public void setMinDate(LocalDate minDate) {
+        this.minDate = minDate;
+    }
+
+    public void setMaxDate(LocalDate maxDate) {
+        this.maxDate = maxDate;
     }
 
     @Override
     public List<Trip> filterTrips(List<Trip> allTrips) {
         List<Trip> result = new ArrayList<>();
         for (Trip trip : allTrips) {
-            if (guide.getSkills().containsAll(trip.getRequiredSkills())) {
+            boolean hasRequiredSkills = guide.getSkills().containsAll(trip.getRequiredSkills());
+            boolean dateOK = (minDate == null || !trip.getDate().isBefore(minDate)) &&
+                             (maxDate == null || !trip.getDate().isAfter(maxDate));
+
+            if (hasRequiredSkills && dateOK) {
                 result.add(trip);
             }
         }

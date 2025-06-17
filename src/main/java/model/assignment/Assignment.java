@@ -2,25 +2,25 @@ package model.assignment;
 
 import model.trip.Trip;
 import model.user.Guide;
-
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Assignment {
     private int assignmentId;
     private Guide guide;
     private Trip trip;
-    private Date date;
+    private LocalDate date;
 
     // Constructor for new assignment (ID will be set by DB, date is now)
     public Assignment(Guide guide, Trip trip) {
         this.assignmentId = 0;
         this.guide = guide;
         this.trip = trip;
-        this.date = new Date();
+        this.date = LocalDate.now();
     }
 
     // Constructor for reconstruction from DB
-    public Assignment(int assignmentId, Guide guide, Trip trip, Date date) {
+    public Assignment(int assignmentId, Guide guide, Trip trip, LocalDate date) {
         this.assignmentId = assignmentId;
         this.guide = guide;
         this.trip = trip;
@@ -51,11 +51,11 @@ public class Assignment {
         this.trip = trip;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

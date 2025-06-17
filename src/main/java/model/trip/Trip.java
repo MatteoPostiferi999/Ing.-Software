@@ -7,9 +7,9 @@ import model.review.ReviewRegister;
 import model.review.Reviewable;
 import model.user.Skill;
 import model.application.ApplicationRegister;
+import java.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Trip implements Reviewable {
@@ -17,7 +17,7 @@ public class Trip implements Reviewable {
     private String title;
     private String description;
     private double price;
-    private Date date;
+    private LocalDate date;
 
     private List<Skill> requiredSkills;
     private List<Activity> plannedActivities;
@@ -27,7 +27,7 @@ public class Trip implements Reviewable {
     private ApplicationRegister applicationRegister;
 
     // Constructor for new Trip (ID will be assigned by the database)
-    public Trip(String title, String description, double price, Date date, int minTrav, int maxTrav, int maxGuides) {
+    public Trip(String title, String description, double price, LocalDate date, int minTrav, int maxTrav, int maxGuides) {
         this.tripId = 0; // will be set by DB
         this.title = title;
         this.description = description;
@@ -41,7 +41,7 @@ public class Trip implements Reviewable {
         this.applicationRegister = new ApplicationRegister();
     }
 
-    public Trip(int tripId, String title, String description, double price, Date date, int minTrav, int maxTrav, int maxGuides) {
+    public Trip(int tripId, String title, String description, double price, LocalDate date, int minTrav, int maxTrav, int maxGuides) {
         this.tripId = tripId;
         this.title = title;
         this.description = description;
@@ -88,11 +88,11 @@ public class Trip implements Reviewable {
         this.price = price;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

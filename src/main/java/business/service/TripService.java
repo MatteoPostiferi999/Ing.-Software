@@ -19,4 +19,9 @@ public class TripService {
     public void editTrip(Trip updatedTrip) {
         tripDAO.update(updatedTrip);
     }
+
+    // Metodo per ottenere i dettagli di un viaggio tramite ID
+    public Trip getTripById(int tripId) {
+        return tripDAO.findById(tripId);
+    }
 }

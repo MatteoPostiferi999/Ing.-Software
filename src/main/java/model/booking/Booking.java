@@ -2,24 +2,23 @@ package model.booking;
 
 import model.trip.Trip;
 import model.user.Traveler;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Booking {
     private int bookingId;
     private Traveler traveler;
     private Trip trip;
-    private Date date;
+    private LocalDate date;
 
     // Constructor for creating a new booking (ID will be assigned by the database)
     public Booking(Traveler traveler, Trip trip) {
         this.bookingId = 0; // Will be assigned by DB
         this.traveler = traveler;
         this.trip = trip;
-        this.date = new Date();
+        this.date = LocalDate.now(); // Current date
     }
 
-    public Booking(int bookingId, Traveler traveler, Trip trip, Date date) {
+    public Booking(int bookingId, Traveler traveler, Trip trip, LocalDate date) {
         this.bookingId = bookingId;
         this.traveler = traveler;
         this.trip = trip;
@@ -43,11 +42,11 @@ public class Booking {
         this.trip = trip;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
