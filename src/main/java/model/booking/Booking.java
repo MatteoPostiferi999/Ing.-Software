@@ -6,10 +6,10 @@ import model.user.Traveler;
 import java.util.Date;
 
 public class Booking {
+    private int bookingId;
     private Traveler traveler;
     private Trip trip;
     private Date date;
-    private int bookingId;
 
     // Constructor for creating a new booking (ID will be assigned by the database)
     public Booking(Traveler traveler, Trip trip) {

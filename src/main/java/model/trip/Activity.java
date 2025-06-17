@@ -1,12 +1,10 @@
 // Activity.java
 package model.trip;
 
-/**
- * Rappresenta un'attività pianificata all'interno di un viaggio.
- */
+
 public class Activity {
     private int activityId;       // ID univoco nel database
-    private int duration;         // in minuti o ore, a tua scelta
+    private int duration;
     private String description;
     private String name;
 

@@ -39,4 +39,12 @@ public class Notification {
     public void setRecipient(Notifiable recipient) {
         this.recipient = recipient;
     }
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }
