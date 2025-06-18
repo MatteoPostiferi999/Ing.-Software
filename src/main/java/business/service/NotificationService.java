@@ -24,9 +24,24 @@ public class NotificationService {
     }
 
     public List<Notification> getUnreadNotifications(Notifiable recipient) {
-        return recipient.getNotificationRegister().getNotifications().stream()
+        List<Notification> unread = recipient.getNotificationRegister().getNotifications().stream()
                 .filter(n -> !n.isRead())
                 .collect(Collectors.toList());
+        for (Notification n : unread) {
+            markAsRead(n);
+        }
+        return unread;
+    }
+
+    public Notification getNextUnreadNotification(Notifiable recipient) {
+        Notification next = recipient.getNotificationRegister().getNotifications().stream()
+                .filter(n -> !n.isRead())
+                .findFirst()
+                .orElse(null);
+        if (next != null) {
+            markAsRead(next);
+        }
+        return next;
     }
 
     public void markAsRead(Notification notification) {

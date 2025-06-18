@@ -38,5 +38,17 @@ public class ApplicationService {
         applicationDAO.update(application); // update status in DB
     }
 
+    public Application getApplication(int applicationId) {
+        return applicationDAO.getById(applicationId);
+    }
 
+
+    public void withdrawApplication(Guide guide, Trip trip) {
+        Application application = trip.getApplicationRegister().getApplicationByGuide(guide);
+        if (application != null && application.isPending()) {
+            applicationRegister.removeApplication(application);
+            applicationDAO.delete(application);
+            notificationService.sendNotification(guide, "Your application for the trip \"" + trip.getTitle() + "\" has been withdrawn.");
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package model.application;
 
 import model.trip.Trip;
+import model.user.Guide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,19 @@ public class ApplicationRegister {
             }
         }
         return acceptedApplications;
+    }
+
+    public Application getApplicationByGuide(Guide guide) {
+        for (Application application : applications) {
+            if (application.getGuide().equals(guide)) {
+                return application;
+            }
+        }
+        return null; // No application found for the given guide
+    }
+
+    public void removeApplication(Application application) {
+        applications.remove(application);
     }
 
     // Other utility methods if needed (e.g., addApplication, removeApplication, etc.)

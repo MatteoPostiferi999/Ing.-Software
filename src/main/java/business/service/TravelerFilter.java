@@ -13,11 +13,13 @@ public class TravelerFilter implements TripFilterStrategy {
 
     private LocalDate minDate;
     private LocalDate maxDate;
-    private Double minPrice;
     private Double maxPrice;
 
-    public TravelerFilter(Traveler traveler) {
+    public TravelerFilter(Traveler traveler, LocalDate minDate, LocalDate maxDate, Double maxPrice) {
         this.traveler = traveler;
+        this.minDate = minDate;
+        this.maxDate = maxDate;
+        this.maxPrice = maxPrice;
     }
 
     public void setMinDate(LocalDate minDate) {
@@ -28,9 +30,6 @@ public class TravelerFilter implements TripFilterStrategy {
         this.maxDate = maxDate;
     }
 
-    public void setMinPrice(Double minPrice) {
-        this.minPrice = minPrice;
-    }
 
     public void setMaxPrice(Double maxPrice) {
         this.maxPrice = maxPrice;
@@ -44,8 +43,7 @@ public class TravelerFilter implements TripFilterStrategy {
             boolean hasFreeSpots = bookingRegister.getBookings().size() < bookingRegister.getMaxTrav();
             boolean dateOK = (minDate == null || !trip.getDate().isBefore(minDate)) &&
                              (maxDate == null || !trip.getDate().isAfter(maxDate));
-            boolean priceOK = (minPrice == null || trip.getPrice() >= minPrice) &&
-                              (maxPrice == null || trip.getPrice() <= maxPrice);
+            boolean priceOK = (maxPrice == null || trip.getPrice() <= maxPrice);
 
             if (hasFreeSpots && dateOK && priceOK) {
                 result.add(trip);

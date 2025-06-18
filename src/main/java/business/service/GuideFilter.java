@@ -11,8 +11,10 @@ public class GuideFilter implements TripFilterStrategy {
     private LocalDate minDate;
     private LocalDate maxDate;
 
-    public GuideFilter(Guide guide) {
+    public GuideFilter(Guide guide, LocalDate minDate, LocalDate maxDate) {
         this.guide = guide;
+        this.minDate = minDate;
+        this.maxDate = maxDate;
     }
 
     public void setMinDate(LocalDate minDate) {

@@ -1,58 +1,53 @@
 package business.controller;
 
 import business.service.*;
+import business.service.ApplicationService;
 import model.user.Guide;
 import model.user.Skill;
 import model.notification.Notification;
 import model.trip.Trip;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class GuideController {
-    private final ApplicationService applicationService;
-    private final ViewTripsService viewTripsService;
-    private final GuideService guideService;
-    private final NotificationService notificationService;
+    private Guide guide;
+    private ViewTripsService viewTripsService;
+    private ApplicationService applicationService;
+    private NotificationService notificationService;
 
-    public GuideController(ApplicationService applicationService,
-                           ViewTripsService viewTripsService,
-                           GuideService guideService,
-                           NotificationService notificationService) {
-        this.applicationService = applicationService;
+    public GuideController(Guide guide, ViewTripsService viewTripsService, ApplicationService applicationService, NotificationService notificationService) {
+        this.guide = guide;
         this.viewTripsService = viewTripsService;
-        this.guideService = guideService;
+        this.applicationService = applicationService;
         this.notificationService = notificationService;
     }
 
-    // Invia una candidatura per un viaggio
-    public void sendApplication(int id, String cv, Guide guide, Trip trip) {
-        applicationService.sendApplication(id, cv, guide, trip);
-    }
-
-    // Visualizza i viaggi compatibili con le skill della guida
-    public List<Trip> viewAvailableTrips(Guide guide) {
-        viewTripsService.setStrategy(new GuideFilter(guide));
+    public List<Trip> viewAvailableTrips(LocalDate minDate, LocalDate maxDate) {
+        viewTripsService.setStrategy(new GuideFilter(guide, minDate, maxDate));
         return viewTripsService.viewTrips();
     }
 
-    // Modifica il profilo della guida (skill, ecc.)
-    public void editGuideProfile(Guide guide, List<Skill> newSkills) {
-        guideService.editProfile(guide, newSkills, guide.getNotificationRegister());
+    public Trip viewTripDetails(int tripId) {
+        return viewTripsService.viewTripDetails(tripId);
     }
 
-    // Recupera tutte le notifiche ricevute dalla guida (senza modificarle)
-    public List<Notification> getNotifications(Guide guide) {
-        return notificationService.getAllNotifications(guide);
+    public void submitApplication(Trip trip, String cv) {
+        applicationService.sendApplication(cv, guide, trip);
     }
 
-    // Marca una singola notifica come letta
-    public void readNotification(Notification notification) {
-        notificationService.markNotificationAsRead(notification);
+    public void withdrawApplication(Trip trip) {
+        applicationService.withdrawApplication(guide, trip);
     }
 
-    // Marca tutte le notifiche della guida come lette
-    public void readAllNotifications(Guide guide) {
-        notificationService.markAllAsRead(guide);
+    public void updateGuideProfile(List<Skill> updatedSkills) {
+        guide.setSkills(updatedSkills);
+        // If persistent storage is used, call the GuideService or DAO to update the guide in the database.
     }
+
+    public Notification readNextUnreadNotification() {
+        return notificationService.getNextUnreadNotification(guide);
+    }
+
 }

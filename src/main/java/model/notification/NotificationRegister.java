@@ -45,4 +45,13 @@ public class NotificationRegister {
     public void setNumUnread(int numUnread) {
         this.numUnread = numUnread;
     }
+
+    public void markAllAsRead() {
+        for (Notification notification : notifications) {
+            if (!notification.isRead()) {
+                notification.setRead(true);
+                numUnread--;
+            }
+        }
+    }
 }

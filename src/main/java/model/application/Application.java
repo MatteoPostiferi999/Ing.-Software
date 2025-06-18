@@ -85,4 +85,8 @@ public class Application {
             throw new IllegalStateException("Cannot reject an application that is not pending.");
         }
     }
+
+    public boolean isPending() {
+        return this.status == ApplicationStatus.PENDING;
+    }
 }
