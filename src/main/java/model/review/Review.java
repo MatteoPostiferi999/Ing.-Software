@@ -19,7 +19,7 @@ public class Review {
         this.text = text;
         this.author = author;
         this.target = target;
-        this.authorID = author.getUserID();
+        this.authorID = author.getTravelerId();
         this.setTargetInfo(target);
     }
 
@@ -30,7 +30,7 @@ public class Review {
         this.text = text;
         this.author = author;
         this.target = target;
-        this.authorID = author != null ? author.getUserID() : 0;
+        this.authorID = author != null ? author.getTravelerId() : 0;
         this.setTargetInfo(target);
     }
 
@@ -117,7 +117,7 @@ public class Review {
     public void setAuthor(Traveler author) {
         this.author = author;
         if (author != null) {
-            this.authorID = author.getUserID();
+            this.authorID = author.getTravelerId();
         }
     }
 

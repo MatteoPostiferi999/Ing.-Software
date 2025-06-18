@@ -71,4 +71,18 @@ public class User {
     public Traveler getTravelerProfile() {
         return travelerProfile;
     }
+
+    public void setGuideProfile(Guide guide) {
+        this.guideProfile = guide;
+        if (guide != null) {
+            guide.setOwner(this);
+        }
+    }
+
+    public void setTravelerProfile(Traveler traveler) {
+        this.travelerProfile = traveler;
+        if (traveler != null) {
+            traveler.setOwner(this);
+        }
+    }
 }

@@ -166,24 +166,4 @@ public class BookingRegister {
     public int getBookingsCount() {
         return bookings.size();
     }
-
-    public List<Booking> getConfirmedBookings() {
-        List<Booking> confirmed = new ArrayList<>();
-        for (Booking booking : bookings) {
-            if (booking.isConfirmed()) {
-                confirmed.add(booking);
-            }
-        }
-        return confirmed;
-    }
-
-    public List<Booking> getCanceledBookings() {
-        List<Booking> canceled = new ArrayList<>();
-        for (Booking booking : bookings) {
-            if (booking.isCanceled()) {
-                canceled.add(booking);
-            }
-        }
-        return canceled;
-    }
 }

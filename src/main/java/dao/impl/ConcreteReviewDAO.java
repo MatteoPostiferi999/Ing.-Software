@@ -93,7 +93,7 @@ public class ConcreteReviewDAO implements ReviewDAO {
 
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, author.getUserID());
+            stmt.setInt(1, author.getTravelerId());
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
