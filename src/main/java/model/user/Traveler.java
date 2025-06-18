@@ -67,3 +67,5 @@ public class Traveler implements Notifiable {
         return notifications;
     }
 }
+
+

@@ -7,11 +7,13 @@ import model.review.Review;
 import model.review.ReviewRegister;
 import model.review.Reviewable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Guide implements Notifiable, Reviewable {
     private int guideId;
-    private List<Skill> skills;
+    private List<Integer> skillIds;  // IDs delle skill per la persistenza
+    private List<Skill> skills;      // Oggetti Skill per la logica di business
 
     private ReviewRegister reviews;
     private NotificationRegister notifications;
@@ -20,7 +22,8 @@ public class Guide implements Notifiable, Reviewable {
     // Constructor for new Guide (created from scratch)
     public Guide(User owner) {
         this.guideId = 0;
-        this.skills = null;
+        this.skillIds = new ArrayList<>();
+        this.skills = new ArrayList<>();
         this.owner = owner;
         this.reviews = new ReviewRegister();
         this.notifications = new NotificationRegister();
@@ -29,6 +32,25 @@ public class Guide implements Notifiable, Reviewable {
     // Constructor for Guide reconstructed from database
     public Guide(int guideId, List<Skill> skills, User owner, ReviewRegister reviews, NotificationRegister notifications) {
         this.guideId = guideId;
+        this.skillIds = new ArrayList<>();
+        this.skills = skills;
+
+        // Estrai gli ID dalle skills
+        if (skills != null) {
+            for (Skill skill : skills) {
+                this.skillIds.add(skill.getSkillId());
+            }
+        }
+
+        this.owner = owner;
+        this.reviews = reviews;
+        this.notifications = notifications;
+    }
+
+    // Constructor with separate skillIds
+    public Guide(int guideId, List<Integer> skillIds, List<Skill> skills, User owner, ReviewRegister reviews, NotificationRegister notifications) {
+        this.guideId = guideId;
+        this.skillIds = skillIds;
         this.skills = skills;
         this.owner = owner;
         this.reviews = reviews;
@@ -44,14 +66,49 @@ public class Guide implements Notifiable, Reviewable {
         this.guideId = guideId;
     }
 
+    public List<Integer> getSkillIds() {
+        return skillIds;
+    }
+
+    public void setSkillIds(List<Integer> skillIds) {
+        this.skillIds = skillIds;
+    }
+
+    public void addSkillId(int skillId) {
+        if (this.skillIds == null) {
+            this.skillIds = new ArrayList<>();
+        }
+        this.skillIds.add(skillId);
+    }
+
     public List<Skill> getSkills() {
         return skills;
     }
 
     public void setSkills(List<Skill> skills) {
         this.skills = skills;
+
+        // Aggiorna anche la lista degli ID
+        this.skillIds = new ArrayList<>();
+        if (skills != null) {
+            for (Skill skill : skills) {
+                this.skillIds.add(skill.getSkillId());
+            }
+        }
     }
 
+    public void addSkill(Skill skill) {
+        if (this.skills == null) {
+            this.skills = new ArrayList<>();
+        }
+        this.skills.add(skill);
+
+        // Aggiunge anche l'ID alla lista degli ID
+        if (this.skillIds == null) {
+            this.skillIds = new ArrayList<>();
+        }
+        this.skillIds.add(skill.getSkillId());
+    }
 
     public ReviewRegister getReviewsRegister() {
         return reviews;

@@ -1,11 +1,13 @@
 package dao.interfaces;
 
-import java.util.List;
 import model.trip.Activity;
-import model.trip.Trip;
+
+import java.util.List;
 
 public interface ActivityDAO {
-List<Activity> getAllByTrip(Trip trip);
-void addToTrip(Trip trip, Activity activity);
-void removeFromTrip(Trip trip, String activityName);
+    void save(Activity activity);
+    void update(Activity activity);
+    Activity findById(int id);
+    List<Activity> findByTripId(int tripId);
+    void delete(int id);
 }

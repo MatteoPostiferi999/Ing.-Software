@@ -7,6 +7,7 @@ public class Activity {
     private int duration;
     private String description;
     private String name;
+    private int tripId;           // ID del viaggio a cui appartiene questa attività
 
     // Costruttore per nuova attività (senza ID)
     public Activity(int duration, String description, String name) {
@@ -15,12 +16,29 @@ public class Activity {
         this.name = name;
     }
 
+    // Costruttore con tripId (per nuova attività)
+    public Activity(int duration, String description, String name, int tripId) {
+        this.duration = duration;
+        this.description = description;
+        this.name = name;
+        this.tripId = tripId;
+    }
+
     // Costruttore per attività esistente (con ID)
     public Activity(int activityId, int duration, String description, String name) {
         this.activityId = activityId;
         this.duration = duration;
         this.description = description;
         this.name = name;
+    }
+
+    // Costruttore completo con tripId
+    public Activity(int activityId, int duration, String description, String name, int tripId) {
+        this.activityId = activityId;
+        this.duration = duration;
+        this.description = description;
+        this.name = name;
+        this.tripId = tripId;
     }
 
     // Getter e Setter
@@ -55,5 +73,13 @@ public class Activity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(int tripId) {
+        this.tripId = tripId;
     }
 }

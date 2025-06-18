@@ -3,7 +3,6 @@ package model.assignment;
 import model.trip.Trip;
 import model.user.Guide;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Assignment {
     private int assignmentId;
@@ -11,12 +10,24 @@ public class Assignment {
     private Trip trip;
     private LocalDate date;
 
+    // ID per la persistenza
+    private int guideId;
+    private int tripId;
+
     // Constructor for new assignment (ID will be set by DB, date is now)
     public Assignment(Guide guide, Trip trip) {
         this.assignmentId = 0;
         this.guide = guide;
         this.trip = trip;
         this.date = LocalDate.now();
+
+        // Estratti gli ID dagli oggetti
+        if (guide != null) {
+            this.guideId = guide.getGuideId();
+        }
+        if (trip != null) {
+            this.tripId = trip.getTripId();
+        }
     }
 
     // Constructor for reconstruction from DB
@@ -25,6 +36,24 @@ public class Assignment {
         this.guide = guide;
         this.trip = trip;
         this.date = date;
+
+        // Estratti gli ID dagli oggetti
+        if (guide != null) {
+            this.guideId = guide.getGuideId();
+        }
+        if (trip != null) {
+            this.tripId = trip.getTripId();
+        }
+    }
+
+    // Constructor con gli ID per il caricamento dal database
+    public Assignment(int assignmentId, int guideId, int tripId, LocalDate date) {
+        this.assignmentId = assignmentId;
+        this.guideId = guideId;
+        this.tripId = tripId;
+        this.date = date;
+        this.guide = null; // Sarà caricato successivamente dal DAO
+        this.trip = null;  // Sarà caricato successivamente dal DAO
     }
 
     public int getAssignmentId() {
@@ -41,6 +70,9 @@ public class Assignment {
 
     public void setGuide(Guide guide) {
         this.guide = guide;
+        if (guide != null) {
+            this.guideId = guide.getGuideId();
+        }
     }
 
     public Trip getTrip() {
@@ -49,6 +81,9 @@ public class Assignment {
 
     public void setTrip(Trip trip) {
         this.trip = trip;
+        if (trip != null) {
+            this.tripId = trip.getTripId();
+        }
     }
 
     public LocalDate getDate() {
@@ -57,5 +92,21 @@ public class Assignment {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public int getGuideId() {
+        return guideId;
+    }
+
+    public void setGuideId(int guideId) {
+        this.guideId = guideId;
+    }
+
+    public int getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(int tripId) {
+        this.tripId = tripId;
     }
 }

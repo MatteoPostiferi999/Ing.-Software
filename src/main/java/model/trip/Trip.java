@@ -13,12 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Trip implements Reviewable {
+    // Attributi base
     private int tripId;
     private String title;
     private String description;
     private double price;
     private LocalDate date;
 
+    // IDs per le relazioni (persistenza)
+    private List<Integer> requiredSkillIds;
+    private List<Integer> activityIds;
+
+    // Registri per la gestione delle relazioni (logica di business)
     private List<Skill> requiredSkills;
     private List<Activity> plannedActivities;
     private ReviewRegister reviews;
@@ -33,6 +39,12 @@ public class Trip implements Reviewable {
         this.description = description;
         this.price = price;
         this.date = date;
+
+        // Inizializzazione delle liste di ID per la persistenza
+        this.requiredSkillIds = new ArrayList<>();
+        this.activityIds = new ArrayList<>();
+
+        // Inizializzazione delle liste e dei registri per la logica di business
         this.requiredSkills = new ArrayList<>();
         this.plannedActivities = new ArrayList<>();
         this.reviews = new ReviewRegister();
@@ -47,6 +59,12 @@ public class Trip implements Reviewable {
         this.description = description;
         this.price = price;
         this.date = date;
+
+        // Inizializzazione delle liste di ID per la persistenza
+        this.requiredSkillIds = new ArrayList<>();
+        this.activityIds = new ArrayList<>();
+
+        // Inizializzazione delle liste e dei registri per la logica di business
         this.requiredSkills = new ArrayList<>();
         this.plannedActivities = new ArrayList<>();
         this.reviews = new ReviewRegister();
@@ -55,7 +73,7 @@ public class Trip implements Reviewable {
         this.applicationRegister = new ApplicationRegister();
     }
 
-    // Getters & Setters
+    // Getters & Setters per attributi base
     public int getTripId() {
         return tripId;
     }
@@ -96,24 +114,97 @@ public class Trip implements Reviewable {
         this.date = date;
     }
 
+    // Getters & Setters per liste di ID (persistenza)
+    public List<Integer> getRequiredSkillIds() {
+        return requiredSkillIds;
+    }
+
+    public void setRequiredSkillIds(List<Integer> requiredSkillIds) {
+        this.requiredSkillIds = requiredSkillIds;
+    }
+
+    public void addRequiredSkillId(Integer skillId) {
+        if (this.requiredSkillIds == null) {
+            this.requiredSkillIds = new ArrayList<>();
+        }
+        this.requiredSkillIds.add(skillId);
+    }
+
+    public List<Integer> getActivityIds() {
+        return activityIds;
+    }
+
+    public void setActivityIds(List<Integer> activityIds) {
+        this.activityIds = activityIds;
+    }
+
+    public void addActivityId(Integer activityId) {
+        if (this.activityIds == null) {
+            this.activityIds = new ArrayList<>();
+        }
+        this.activityIds.add(activityId);
+    }
+
+    // Getters & Setters per le liste e i registri (logica di business)
     public List<Skill> getRequiredSkills() {
         return requiredSkills;
     }
 
     public void setRequiredSkills(List<Skill> requiredSkills) {
         this.requiredSkills = requiredSkills;
+
+        // Aggiorna anche la lista degli ID
+        this.requiredSkillIds.clear();
+        for (Skill skill : requiredSkills) {
+            this.requiredSkillIds.add(skill.getSkillId());
+        }
+    }
+
+    public void addRequiredSkill(Skill skill) {
+        if (this.requiredSkills == null) {
+            this.requiredSkills = new ArrayList<>();
+        }
+        this.requiredSkills.add(skill);
+
+        // Aggiorna anche la lista degli ID
+        if (this.requiredSkillIds == null) {
+            this.requiredSkillIds = new ArrayList<>();
+        }
+        this.requiredSkillIds.add(skill.getSkillId());
     }
 
     public List<Activity> getPlannedActivities() {
         return plannedActivities;
     }
 
-    public void setPlannedActivities(List<Activity> plannedActivities) {
-        this.plannedActivities = plannedActivities;
+    public void setPlannedActivities(List<Activity> activities) {
+        this.plannedActivities = activities;
+
+        // Aggiorna anche la lista degli ID
+        this.activityIds.clear();
+        for (Activity activity : activities) {
+            this.activityIds.add(activity.getActivityId());
+        }
     }
 
+    public void addPlannedActivity(Activity activity) {
+        if (this.plannedActivities == null) {
+            this.plannedActivities = new ArrayList<>();
+        }
+        this.plannedActivities.add(activity);
 
-    public void setReviews(ReviewRegister reviews) {
+        // Aggiorna anche la lista degli ID
+        if (this.activityIds == null) {
+            this.activityIds = new ArrayList<>();
+        }
+        this.activityIds.add(activity.getActivityId());
+    }
+
+    public ReviewRegister getReviewRegister() {
+        return reviews;
+    }
+
+    public void setReviewRegister(ReviewRegister reviews) {
         this.reviews = reviews;
     }
 
@@ -133,27 +224,38 @@ public class Trip implements Reviewable {
         this.assignedGuides = assignedGuides;
     }
 
-    public model.application.ApplicationRegister getApplicationRegister() {
+    public ApplicationRegister getApplicationRegister() {
         return applicationRegister;
     }
 
-    // Reviewable implementation
+    public void setApplicationRegister(ApplicationRegister applicationRegister) {
+        this.applicationRegister = applicationRegister;
+    }
 
+    // Implementazione di Reviewable
     @Override
     public void addReview(Review review) {
         reviews.addReview(review);
     }
 
-    public ReviewRegister getReviewRegister() {
-        return reviews;
+    // Altri metodi di business logic
+    public boolean isAlreadyStarted() {
+        return date.isBefore(LocalDate.now());
     }
-
 
     public int getMaxGuides() {
         return assignedGuides.getMaxGuides();
     }
 
-    public boolean isAlreadyStarted() {
-        return date.isBefore(LocalDate.now());
+    public int getMaxTravelers() {
+        return bookings.getMaxTrav();
+    }
+
+    public int getId() {
+        return tripId;
+    }
+
+    public void setId(int id) {
+        this.tripId = id;
     }
 }

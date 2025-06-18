@@ -45,4 +45,8 @@ public class AssignmentRegister {
     public List<Assignment> getAllAssignments() {
         return new ArrayList<>(assignments);
     }
+
+    public boolean canAddMoreGuides() {
+        return assignments.size() < maxGuides;
+    }
 }
