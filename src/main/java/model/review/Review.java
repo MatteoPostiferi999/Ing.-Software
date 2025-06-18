@@ -8,6 +8,9 @@ public class Review {
     private String text;
     private Traveler author;
     private Reviewable target;
+    private int authorID;
+    private int targetID;
+    private String targetType;
 
     // Constructor for new reviews (reviewID will be assigned later)
     public Review(int rating, String text, Traveler author, Reviewable target) {
@@ -16,6 +19,8 @@ public class Review {
         this.text = text;
         this.author = author;
         this.target = target;
+        this.authorID = author.getUserID();
+        this.setTargetInfo(target);
     }
 
     // Constructor for reconstruction from database
@@ -25,6 +30,42 @@ public class Review {
         this.text = text;
         this.author = author;
         this.target = target;
+        this.authorID = author != null ? author.getUserID() : 0;
+        this.setTargetInfo(target);
+    }
+
+    // Constructor for lazy loading
+    public Review(int reviewID, int rating, String text, int authorID, int targetID, String targetType) {
+        this.reviewID = reviewID;
+        this.rating = rating;
+        this.text = text;
+        this.author = null;
+        this.target = null;
+        this.authorID = authorID;
+        this.targetID = targetID;
+        this.targetType = targetType;
+    }
+
+    // Helper method to set target info
+    private void setTargetInfo(Reviewable target) {
+        if (target != null) {
+            this.targetType = target.getClass().getSimpleName();
+
+            // Extract the target ID based on its type
+            if ("Guide".equals(this.targetType)) {
+                try {
+                    this.targetID = (int) target.getClass().getMethod("getUserID").invoke(target);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if ("Trip".equals(this.targetType)) {
+                try {
+                    this.targetID = (int) target.getClass().getMethod("getTripID").invoke(target);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     // Getters
@@ -48,6 +89,18 @@ public class Review {
         return target;
     }
 
+    public int getAuthorID() {
+        return authorID;
+    }
+
+    public int getTargetID() {
+        return targetID;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
     // Setters
     public void setReviewID(int reviewID) {
         this.reviewID = reviewID;
@@ -63,10 +116,25 @@ public class Review {
 
     public void setAuthor(Traveler author) {
         this.author = author;
+        if (author != null) {
+            this.authorID = author.getUserID();
+        }
     }
 
     public void setTarget(Reviewable target) {
         this.target = target;
+        setTargetInfo(target);
+    }
+
+    public void setAuthorID(int authorID) {
+        this.authorID = authorID;
+    }
+
+    public void setTargetID(int targetID) {
+        this.targetID = targetID;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 }
-
