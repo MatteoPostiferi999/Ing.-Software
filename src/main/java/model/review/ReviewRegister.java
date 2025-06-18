@@ -21,7 +21,6 @@ public class ReviewRegister {
     }
 
 
-
     public void addReview(Review review) {
         reviews.add(review);
         updateAverageRating();
@@ -51,5 +50,6 @@ public class ReviewRegister {
         }
         averageRating = (double) total / reviews.size();
     }
+
 }
 

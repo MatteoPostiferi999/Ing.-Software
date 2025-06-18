@@ -249,7 +249,7 @@ public class ConcreteTripDAO implements TripDAO {
     }
 
     // Metodo per caricare tutte le relazioni di un viaggio
-    private void loadTripRelations(Trip trip) {
+    public void loadTripRelations(Trip trip) {
         loadRequiredSkills(trip);
         loadActivities(trip);
 
