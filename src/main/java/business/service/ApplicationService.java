@@ -224,4 +224,20 @@ public class ApplicationService {
         rejectedApplications.removeAll(selectedApplications);
         rejectApplications(rejectedApplications);
     }
+
+    /**
+     * Ottiene tutte le candidature per un viaggio specifico
+     * @param trip Il viaggio di cui ottenere le candidature
+     * @return Lista delle candidature per il viaggio specificato
+     */
+    public List<Application> getApplicationsByTrip(Trip trip) {
+        // Assicuriamo che le candidature siano state caricate dal database
+        if (trip.getApplicationRegister().getApplications().isEmpty()) {
+            loadApplicationsForTrip(trip);
+        }
+
+        // Ritorna le candidature dal registro del viaggio
+        return trip.getApplicationRegister().getApplications();
+    }
+
 }

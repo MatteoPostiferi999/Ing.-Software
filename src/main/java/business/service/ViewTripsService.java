@@ -19,14 +19,25 @@ public class ViewTripsService {
         this.strategy = strategy;
     }
 
+    /**
+     * Visualizza i viaggi applicando la strategia di filtro corrente.
+     * Se non è stata impostata alcuna strategia, restituisce tutti i viaggi.
+     * @return lista di viaggi che soddisfano i criteri di filtro
+     */
     public List<Trip> viewTrips() {
-        List<Trip> allTrips = tripDAO.getAll();  // carica tutti i viaggi
+        List<Trip> allTrips = tripDAO.findAll();  // Usa findAll() invece di getAll()
         if (strategy != null) {
             return strategy.filterTrips(allTrips);
         }
         return allTrips;
     }
 
+    /**
+     * Visualizza i dettagli di un viaggio specifico, ma solo se il viaggio
+     * è visibile secondo la strategia di filtro corrente.
+     * @param tripId ID del viaggio
+     * @return il viaggio con i dettagli o null se non trovato o non visibile
+     */
     public Trip viewTripDetails(int tripId) {
         Trip trip = tripService.getTripById(tripId);
         if (trip == null) return null;

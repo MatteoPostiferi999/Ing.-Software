@@ -173,4 +173,37 @@ public class TripService {
         }
         return trips;
     }
+
+    /**
+     * Elimina un viaggio dal sistema
+     * @param tripId ID del viaggio da eliminare
+     * @throws IllegalStateException se il viaggio è già iniziato
+     */
+    public void deleteTrip(int tripId) {
+        // Ottieni direttamente il viaggio completo con tutte le relazioni
+        final Trip trip = getCompleteTripById(tripId);
+        if (trip == null) {
+            return; // Nessun viaggio da eliminare
+        }
+
+        // Verifica che il viaggio non sia già iniziato
+        if (trip.isAlreadyStarted()) {
+            throw new IllegalStateException("Cannot delete a trip that has already started.");
+        }
+
+        // Notifica le guide assegnate
+        trip.getAssignmentRegister().getAllAssignments().forEach(assignment -> {
+            notificationService.sendNotification(assignment.getGuide(),
+                "Trip has been cancelled: " + trip.getTitle());
+        });
+
+        // Notifica i viaggiatori prenotati
+        trip.getBookingRegister().getAllBookings().forEach(booking -> {
+            notificationService.sendNotification(booking.getTraveler(),
+                "Trip has been cancelled: " + trip.getTitle());
+        });
+
+        // Elimina il viaggio dal database usando il metodo corretto dell'interfaccia
+        tripDAO.deleteById(tripId);
+    }
 }

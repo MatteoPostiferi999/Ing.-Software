@@ -182,4 +182,31 @@ public class NotificationService {
         }
         return null;
     }
+
+    /**
+     * Ottiene tutte le notifiche per un destinatario specifico
+     * @param recipient destinatario delle notifiche
+     * @return lista delle notifiche del destinatario
+     */
+    public List<Notification> getNotificationsByRecipient(Notifiable recipient) {
+        // Prima carichiamo le notifiche dal database se necessario
+        loadNotificationsIfEmpty(recipient);
+
+        // Ritorna tutte le notifiche del destinatario
+        return recipient.getNotificationRegister().getNotifications();
+    }
+
+    /**
+     * Marca una notifica come letta utilizzando il suo ID
+     * @param notificationId ID della notifica da marcare come letta
+     * @return true se la notifica è stata trovata e marcata come letta, false altrimenti
+     */
+    public boolean markAsReadById(int notificationId) {
+        Notification notification = getNotificationById(notificationId);
+        if (notification != null) {
+            markAsRead(notification);
+            return true;
+        }
+        return false;
+    }
 }

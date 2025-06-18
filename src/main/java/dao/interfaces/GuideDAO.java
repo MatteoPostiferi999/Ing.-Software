@@ -2,6 +2,7 @@ package dao.interfaces;
 
 import java.util.List;
 import model.user.Guide;
+import model.trip.Trip;
 
 public interface GuideDAO {
     Guide getById(int id);
@@ -12,4 +13,11 @@ public interface GuideDAO {
     void update(Guide guide);
     void delete(int id);
     void delete(Guide guide); // Sovraccarico del metodo delete per accettare un oggetto Guide
+
+    /**
+     * Ottiene tutti i viaggi assegnati a una guida specifica.
+     * @param guideId ID della guida
+     * @return Lista di viaggi assegnati alla guida
+     */
+    List<Trip> getAssignedTrips(int guideId);
 }

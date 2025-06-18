@@ -1,5 +1,6 @@
 package model.assignment;
 
+import model.user.Guide;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +49,22 @@ public class AssignmentRegister {
 
     public boolean canAddMoreGuides() {
         return assignments.size() < maxGuides;
+    }
+
+    /**
+     * Verifica se una guida è assegnata a questo registro
+     * @param guide La guida da verificare
+     * @return true se la guida è assegnata, false altrimenti
+     */
+    public boolean hasGuide(Guide guide) {
+        if (guide == null) return false;
+
+        for (Assignment assignment : assignments) {
+            if (assignment.getGuide().getGuideId() == guide.getGuideId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
