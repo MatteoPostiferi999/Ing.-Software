@@ -2,6 +2,7 @@ package dao.impl;
 
 import dao.interfaces.BookingDAO;
 import dao.interfaces.TravelerDAO;
+import dao.interfaces.TripDAO;
 import db.DBManager;
 import model.booking.Booking;
 import model.user.Traveler;
@@ -14,17 +15,23 @@ import java.util.List;
 public class ConcreteBookingDAO implements BookingDAO {
     private final DBManager dbManager = DBManager.getInstance();
     private TravelerDAO travelerDAO;
+    private TripDAO tripDAO;
 
     public ConcreteBookingDAO() {
         // Constructor
     }
 
-    public ConcreteBookingDAO(TravelerDAO travelerDAO) {
+    public ConcreteBookingDAO(TravelerDAO travelerDAO, TripDAO tripDAO) {
         this.travelerDAO = travelerDAO;
+        this.tripDAO = tripDAO;
     }
 
     public void setTravelerDAO(TravelerDAO travelerDAO) {
         this.travelerDAO = travelerDAO;
+    }
+
+    public void setTripDAO(TripDAO tripDAO) {
+        this.tripDAO = tripDAO;
     }
 
     @Override
@@ -114,6 +121,16 @@ public class ConcreteBookingDAO implements BookingDAO {
     public void loadBookingsForTrip(Trip trip) {
         List<Booking> bookings = getByTripId(trip.getTripId());
         for (Booking booking : bookings) {
+            // Carica il viaggiatore se necessario
+            if (booking.getTraveler() == null && travelerDAO != null) {
+                Traveler traveler = travelerDAO.findById(booking.getTravelerId());
+                booking.setTraveler(traveler);
+            }
+
+            // Imposta il riferimento al viaggio
+            booking.setTrip(trip);
+
+            // Aggiungi la prenotazione al registro del viaggio
             trip.getBookingRegister().addBooking(booking);
         }
     }
@@ -121,7 +138,7 @@ public class ConcreteBookingDAO implements BookingDAO {
     @Override
     public void save(Booking booking) {
         if (booking.getBookingId() == 0) {
-            // Nuovo booking
+            // Nuova prenotazione
             insertBooking(booking);
         } else {
             // Aggiornamento
@@ -130,16 +147,17 @@ public class ConcreteBookingDAO implements BookingDAO {
     }
 
     private void insertBooking(Booking booking) {
-        String sql = "INSERT INTO booking (traveler_id, trip_id, status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO booking (traveler_id, trip_id, booking_date) VALUES (?, ?, ?)";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, booking.getTraveler().getTravelerId());
-            stmt.setInt(2, booking.getTrip().getTripId());
-            stmt.setString(3, booking.getStatus());
+            stmt.setInt(1, booking.getTravelerId());
+            stmt.setInt(2, booking.getTripId());
+            stmt.setDate(3, Date.valueOf(booking.getDate()));
             stmt.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                booking.setBookingId(rs.getInt(1));
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    booking.setBookingId(rs.getInt(1));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -147,12 +165,12 @@ public class ConcreteBookingDAO implements BookingDAO {
     }
 
     private void updateBooking(Booking booking) {
-        String sql = "UPDATE booking SET traveler_id = ?, trip_id = ?, status = ? WHERE booking_id = ?";
+        String sql = "UPDATE booking SET traveler_id = ?, trip_id = ?, booking_date = ? WHERE booking_id = ?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, booking.getTraveler().getTravelerId());
-            stmt.setInt(2, booking.getTrip().getTripId());
-            stmt.setString(3, booking.getStatus());
+            stmt.setInt(1, booking.getTravelerId());
+            stmt.setInt(2, booking.getTripId());
+            stmt.setDate(3, Date.valueOf(booking.getDate()));
             stmt.setInt(4, booking.getBookingId());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -172,25 +190,35 @@ public class ConcreteBookingDAO implements BookingDAO {
         }
     }
 
-    // Metodo di supporto per creare un oggetto Booking dal ResultSet
+    // Metodo helper per creare un oggetto Booking dal ResultSet
     private Booking createBookingFromResultSet(ResultSet rs) throws SQLException {
         int bookingId = rs.getInt("booking_id");
         int travelerId = rs.getInt("traveler_id");
         int tripId = rs.getInt("trip_id");
-        String status = rs.getString("status");
+        Date bookingDate = rs.getDate("booking_date");
 
-        // Questo è un esempio base. In una implementazione completa,
-        // dovresti utilizzare TravelerDAO e TripDAO per caricare questi oggetti
-        // Per ora, creiamo oggetti minimi per evitare NullPointerException
-        Traveler traveler = travelerDAO != null ? travelerDAO.findById(travelerId) : new Traveler();
-        traveler.setTravelerId(travelerId);
+        // Crea il booking con gli ID
+        Booking booking = new Booking(
+            bookingId,
+            travelerId,
+            tripId,
+            bookingDate.toLocalDate()
+        );
 
-        Trip trip = new Trip("", "", 0, null, 0, 0, 0);
-        trip.setTripId(tripId);
+        // Se disponibili, carica gli oggetti correlati
+        if (travelerDAO != null) {
+            Traveler traveler = travelerDAO.findById(travelerId);
+            if (traveler != null) {
+                booking.setTraveler(traveler);
+            }
+        }
 
-        Booking booking = new Booking(traveler, trip);
-        booking.setBookingId(bookingId);
-        booking.setStatus(status);
+        if (tripDAO != null) {
+            Trip trip = tripDAO.findById(tripId);
+            if (trip != null) {
+                booking.setTrip(trip);
+            }
+        }
 
         return booking;
     }

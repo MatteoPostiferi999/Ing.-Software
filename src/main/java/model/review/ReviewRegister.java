@@ -52,3 +52,4 @@ public class ReviewRegister {
         averageRating = (double) total / reviews.size();
     }
 }
+

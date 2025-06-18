@@ -12,3 +12,4 @@ public interface ReviewDAO {
     void save(Review review);
     void delete(int id);
 }
+

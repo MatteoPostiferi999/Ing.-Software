@@ -8,8 +8,13 @@ public class Application {
     private String CV;
     private ApplicationStatus status;
 
+    // Oggetti correlati per la logica di business
     private Guide guide;
     private Trip trip;
+
+    // ID per la persistenza
+    private int guideId;
+    private int tripId;
 
     // Constructor for new Application (ID will be assigned by the database)
     public Application(String CV, Guide guide, Trip trip) {
@@ -18,6 +23,14 @@ public class Application {
         this.guide = guide;
         this.trip = trip;
         this.status = ApplicationStatus.PENDING;
+
+        // Estratti gli ID dagli oggetti
+        if (guide != null) {
+            this.guideId = guide.getGuideId();
+        }
+        if (trip != null) {
+            this.tripId = trip.getTripId();
+        }
     }
 
     // Constructor for reconstructing Application from DB
@@ -27,6 +40,25 @@ public class Application {
         this.guide = guide;
         this.trip = trip;
         this.status = status;
+
+        // Estratti gli ID dagli oggetti
+        if (guide != null) {
+            this.guideId = guide.getGuideId();
+        }
+        if (trip != null) {
+            this.tripId = trip.getTripId();
+        }
+    }
+
+    // Constructor con gli ID per il caricamento dal database
+    public Application(int applicationId, String CV, int guideId, int tripId, ApplicationStatus status) {
+        this.applicationId = applicationId;
+        this.CV = CV;
+        this.guideId = guideId;
+        this.tripId = tripId;
+        this.status = status;
+        this.guide = null; // Sarà caricato successivamente dal DAO
+        this.trip = null;  // Sarà caricato successivamente dal DAO
     }
 
     // Getters & Setters
@@ -60,6 +92,17 @@ public class Application {
 
     public void setGuide(Guide guide) {
         this.guide = guide;
+        if (guide != null) {
+            this.guideId = guide.getGuideId();
+        }
+    }
+
+    public int getGuideId() {
+        return guideId;
+    }
+
+    public void setGuideId(int guideId) {
+        this.guideId = guideId;
     }
 
     public Trip getTrip() {
@@ -68,6 +111,17 @@ public class Application {
 
     public void setTrip(Trip trip) {
         this.trip = trip;
+        if (trip != null) {
+            this.tripId = trip.getTripId();
+        }
+    }
+
+    public int getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(int tripId) {
+        this.tripId = tripId;
     }
 
     public void accept() {
@@ -88,5 +142,13 @@ public class Application {
 
     public boolean isPending() {
         return this.status == ApplicationStatus.PENDING;
+    }
+
+    public boolean isAccepted() {
+        return this.status == ApplicationStatus.ACCEPTED;
+    }
+
+    public boolean isRejected() {
+        return this.status == ApplicationStatus.REJECTED;
     }
 }
