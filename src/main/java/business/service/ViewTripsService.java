@@ -24,8 +24,11 @@ public class ViewTripsService {
      * Se non è stata impostata alcuna strategia, restituisce tutti i viaggi.
      * @return lista di viaggi che soddisfano i criteri di filtro
      */
+
+
+
     public List<Trip> viewTrips() {
-        List<Trip> allTrips = tripDAO.findAll();  // Usa findAll() invece di getAll()
+        List<Trip> allTrips = tripDAO.findAll();
         if (strategy != null) {
             return strategy.filterTrips(allTrips);
         }

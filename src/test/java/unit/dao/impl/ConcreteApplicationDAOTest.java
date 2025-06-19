@@ -1,10 +1,7 @@
-// ConcreteApplicationDAOTest.java
 package unit.dao.impl;
 
-import dao.impl.ConcreteApplicationDAO;
 import dao.interfaces.GuideDAO;
 import dao.interfaces.TripDAO;
-import db.DBManager;
 import model.application.Application;
 import model.application.ApplicationRegister;
 import model.trip.Trip;
@@ -14,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import unit.dao.fake.FakeConcreteApplicationDAO;
 
 import java.util.Arrays;
 
@@ -27,7 +25,7 @@ class ConcreteApplicationDAOTest {
     @Mock GuideDAO guideDAO;
     @Mock TripDAO tripDAO;
 
-    ConcreteApplicationDAO dao;
+    FakeConcreteApplicationDAO dao;
 
     @Mock Trip trip;
     @Mock Guide guide;
@@ -36,7 +34,7 @@ class ConcreteApplicationDAOTest {
 
     @BeforeEach
     void setUp() {
-        dao = spy(new ConcreteApplicationDAO()); // NON usa @InjectMocks così evita il DBManager
+        dao = spy(new FakeConcreteApplicationDAO());
         dao.setGuideDAO(guideDAO);
         dao.setTripDAO(tripDAO);
     }
@@ -61,14 +59,14 @@ class ConcreteApplicationDAOTest {
     @Test
     void hasGuideAppliedForTrip_shouldReturnTrueWhenFound() {
         Application mockApp = mock(Application.class);
-        ConcreteApplicationDAO spyDao = spy(new ConcreteApplicationDAO());
+        FakeConcreteApplicationDAO spyDao = spy(new FakeConcreteApplicationDAO());
         doReturn(mockApp).when(spyDao).findByGuideAndTrip(3, 5);
         assertTrue(spyDao.hasGuideAppliedForTrip(3, 5));
     }
 
     @Test
     void hasGuideAppliedForTrip_shouldReturnFalseWhenNotFound() {
-        ConcreteApplicationDAO spyDao = spy(new ConcreteApplicationDAO());
+        FakeConcreteApplicationDAO spyDao = spy(new FakeConcreteApplicationDAO());
         doReturn(null).when(spyDao).findByGuideAndTrip(3, 5);
         assertFalse(spyDao.hasGuideAppliedForTrip(3, 5));
     }

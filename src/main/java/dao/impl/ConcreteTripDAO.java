@@ -22,9 +22,7 @@ public class ConcreteTripDAO implements TripDAO {
     private AssignmentDAO assignmentDAO;
     private ApplicationDAO applicationDAO;
 
-    public ConcreteTripDAO() {
-        // I DAO correlati possono essere iniettati qui o tramite un metodo di inizializzazione
-    }
+    public ConcreteTripDAO() { }
 
     public void setActivityDAO(ActivityDAO activityDAO) {
         this.activityDAO = activityDAO;
@@ -44,9 +42,16 @@ public class ConcreteTripDAO implements TripDAO {
 
     @Override
     public void save(Trip trip) {
-        String sql = "INSERT INTO trip (title, description, price, date, min_trav, max_trav, max_guides) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = """
+        INSERT INTO trips (
+            title, description, price, date,
+            min_travelers, max_travelers, max_guides
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    """;
+
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             stmt.setString(1, trip.getTitle());
             stmt.setString(2, trip.getDescription());
             stmt.setDouble(3, trip.getPrice());
@@ -55,21 +60,21 @@ public class ConcreteTripDAO implements TripDAO {
             stmt.setInt(6, trip.getBookingRegister().getMaxTrav());
             stmt.setInt(7, trip.getAssignmentRegister().getMaxGuides());
             stmt.executeUpdate();
+
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     trip.setTripId(rs.getInt(1));
                 }
             }
 
-            // Salvare le attività del viaggio
+            // salva attività
             if (activityDAO != null && trip.getPlannedActivities() != null) {
-                for (Activity activity : trip.getPlannedActivities()) {
-                    activity.setTripId(trip.getTripId());
-                    activityDAO.save(activity);
+                for (Activity a : trip.getPlannedActivities()) {
+                    a.setTripId(trip.getTripId());
+                    activityDAO.save(a);
                 }
             }
-
-            // Salvare le skills richieste
+            // salva skills richieste
             saveRequiredSkills(trip);
 
         } catch (SQLException e) {
@@ -77,14 +82,14 @@ public class ConcreteTripDAO implements TripDAO {
         }
     }
 
-    // Metodo per salvare le skills richieste
     private void saveRequiredSkills(Trip trip) {
         String sql = "INSERT INTO trip_required_skills (trip_id, skill_id) VALUES (?, ?)";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (Skill skill : trip.getRequiredSkills()) {
+
+            for (Skill s : trip.getRequiredSkills()) {
                 stmt.setInt(1, trip.getTripId());
-                stmt.setInt(2, skill.getSkillId());
+                stmt.setInt(2, s.getSkillId());
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -94,9 +99,11 @@ public class ConcreteTripDAO implements TripDAO {
 
     @Override
     public void update(Trip trip) {
-        String sql = "UPDATE trip SET title = ?, description = ?, price = ?, date = ?, min_trav = ?, max_trav = ?, max_guides = ? WHERE trip_id = ?";
+        String sql = "UPDATE trips SET title=?, description=?, price=?, date=?, min_travelers=?, max_travelers=?, max_guides=? "
+                + "WHERE trip_id=?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, trip.getTitle());
             stmt.setString(2, trip.getDescription());
             stmt.setDouble(3, trip.getPrice());
@@ -107,19 +114,15 @@ public class ConcreteTripDAO implements TripDAO {
             stmt.setInt(8, trip.getTripId());
             stmt.executeUpdate();
 
-            // Aggiornare le attività del viaggio
+            // rimuovi e risalva attività
             if (activityDAO != null) {
-                // Prima elimina tutte le attività esistenti
                 deleteActivities(trip.getTripId());
-
-                // Poi inserisci le nuove attività
-                for (Activity activity : trip.getPlannedActivities()) {
-                    activity.setTripId(trip.getTripId());
-                    activityDAO.save(activity);
+                for (Activity a : trip.getPlannedActivities()) {
+                    a.setTripId(trip.getTripId());
+                    activityDAO.save(a);
                 }
             }
-
-            // Aggiornare le skills richieste
+            // rimuovi e risalva skills
             updateRequiredSkills(trip);
 
         } catch (SQLException e) {
@@ -127,43 +130,44 @@ public class ConcreteTripDAO implements TripDAO {
         }
     }
 
-    // Metodo per eliminare tutte le attività di un viaggio
     private void deleteActivities(int tripId) {
-        String sql = "DELETE FROM activity WHERE trip_id = ?";
+        String sql = "DELETE FROM activities WHERE trip_id=?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, tripId);
             stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Metodo per aggiornare le skills richieste
     private void updateRequiredSkills(Trip trip) {
-        // Prima elimina tutte le skills esistenti
-        String deleteSql = "DELETE FROM trip_required_skills WHERE trip_id = ?";
+        String deleteSql = "DELETE FROM trip_required_skills WHERE trip_id=?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
+
             stmt.setInt(1, trip.getTripId());
             stmt.executeUpdate();
+            saveRequiredSkills(trip);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        // Poi inserisci le nuove skills
-        saveRequiredSkills(trip);
     }
 
     @Override
     public Trip findById(int id) {
-        String sql = "SELECT * FROM trip WHERE trip_id = ?";
+        String sql = "SELECT * FROM trips WHERE trip_id=?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return createBasicTripFromResultSet(rs);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return createBasicTripFromResultSet(rs);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -173,48 +177,41 @@ public class ConcreteTripDAO implements TripDAO {
 
     @Override
     public Trip findByIdFull(int id) {
-        Trip trip = findById(id);
-        if (trip != null) {
-            loadTripRelations(trip);
-        }
-        return trip;
+        var t = findById(id);
+        if (t != null) loadTripRelations(t);
+        return t;
     }
 
     @Override
     public List<Trip> findAll() {
-        List<Trip> trips = new ArrayList<>();
-        String sql = "SELECT * FROM trip";
+        List<Trip> list = new ArrayList<>();
+        String sql = "SELECT * FROM trips";
         try (Connection conn = dbManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                trips.add(createBasicTripFromResultSet(rs));
-            }
+
+            while (rs.next()) list.add(createBasicTripFromResultSet(rs));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return trips;
+        return list;
     }
 
     @Override
     public List<Trip> findAllFull() {
-        List<Trip> trips = findAll();
-        for (Trip trip : trips) {
-            loadTripRelations(trip);
-        }
-        return trips;
+        var all = findAll();
+        for (Trip t : all) loadTripRelations(t);
+        return all;
     }
 
     @Override
     public void deleteById(int id) {
-        // Prima elimina le relazioni
         deleteActivities(id);
         deleteRequiredSkills(id);
-
-        // Poi elimina il viaggio
-        String sql = "DELETE FROM trip WHERE trip_id = ?";
+        String sql = "DELETE FROM trips WHERE trip_id=?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -222,11 +219,11 @@ public class ConcreteTripDAO implements TripDAO {
         }
     }
 
-    // Metodo per eliminare le skills richieste per un viaggio
     private void deleteRequiredSkills(int tripId) {
-        String sql = "DELETE FROM trip_required_skills WHERE trip_id = ?";
+        String sql = "DELETE FROM trip_required_skills WHERE trip_id=?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, tripId);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -234,80 +231,57 @@ public class ConcreteTripDAO implements TripDAO {
         }
     }
 
-    // Metodo per creare un oggetto Trip base dal ResultSet
     private Trip createBasicTripFromResultSet(ResultSet rs) throws SQLException {
-        int tripId = rs.getInt("trip_id");
+        int id       = rs.getInt("trip_id");
         String title = rs.getString("title");
-        String description = rs.getString("description");
-        double price = rs.getDouble("price");
-        LocalDate date = rs.getDate("date").toLocalDate();
-        int minTrav = rs.getInt("min_trav");
-        int maxTrav = rs.getInt("max_trav");
-        int maxGuides = rs.getInt("max_guides");
-
-        return new Trip(tripId, title, description, price, date, minTrav, maxTrav, maxGuides);
+        String desc  = rs.getString("description");
+        double pr    = rs.getDouble("price");
+        LocalDate dt = rs.getDate("date").toLocalDate();
+        int minT     = rs.getInt("min_travelers");
+        int maxT     = rs.getInt("max_travelers");
+        int maxG     = rs.getInt("max_guides");
+        return new Trip(id, title, desc, pr, dt, minT, maxT, maxG);
     }
 
-    // Metodo per caricare tutte le relazioni di un viaggio
     public void loadTripRelations(Trip trip) {
         loadRequiredSkills(trip);
         loadActivities(trip);
-
-        // Carica anche le prenotazioni se BookingDAO è disponibile
-        if (bookingDAO != null) {
-            bookingDAO.loadBookingsForTrip(trip);
-        }
-
-        // Carica le assegnazioni se AssignmentDAO è disponibile
-        if (assignmentDAO != null) {
-            assignmentDAO.loadAssignmentsForTrip(trip);
-        }
-
-        // Carica le applicazioni se ApplicationDAO è disponibile
-        if (applicationDAO != null) {
-            applicationDAO.loadApplicationsForTrip(trip);
-        }
+        if (bookingDAO     != null) bookingDAO.loadBookingsForTrip(trip);
+        if (assignmentDAO  != null) assignmentDAO.loadAssignmentsForTrip(trip);
+        if (applicationDAO != null) applicationDAO.loadApplicationsForTrip(trip);
     }
 
-    // Metodo per caricare le skills richieste
     private void loadRequiredSkills(Trip trip) {
-        String sql = "SELECT s.* FROM skill s JOIN trip_required_skills trs ON s.skill_id = trs.skill_id WHERE trs.trip_id = ?";
+        String sql = "SELECT s.* FROM skills s " +
+                "JOIN trip_required_skills trs ON s.skill_id=trs.skill_id " +
+                "WHERE trs.trip_id=?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, trip.getTripId());
-            ResultSet rs = stmt.executeQuery();
-            List<Skill> skills = new ArrayList<>();
-            List<Integer> skillIds = new ArrayList<>();
-
-            while (rs.next()) {
-                int skillId = rs.getInt("skill_id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-
-                Skill skill = new Skill(skillId, name, description);
-                skills.add(skill);
-                skillIds.add(skillId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<Skill> skills = new ArrayList<>();
+                List<Integer> ids  = new ArrayList<>();
+                while (rs.next()) {
+                    int sid = rs.getInt("skill_id");
+                    skills.add(new Skill(sid, rs.getString("name"), rs.getString("description")));
+                    ids.add(sid);
+                }
+                trip.setRequiredSkills(skills);
+                trip.setRequiredSkillIds(ids);
             }
-
-            trip.setRequiredSkills(skills);
-            trip.setRequiredSkillIds(skillIds);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Metodo per caricare le attività
     private void loadActivities(Trip trip) {
         if (activityDAO != null) {
-            List<Activity> activities = activityDAO.findByTripId(trip.getTripId());
-            List<Integer> activityIds = new ArrayList<>();
-
-            for (Activity activity : activities) {
-                activityIds.add(activity.getActivityId());
-            }
-
-            trip.setPlannedActivities(activities);
-            trip.setActivityIds(activityIds);
+            var acts = activityDAO.findByTripId(trip.getTripId());
+            trip.setPlannedActivities(acts);
+            List<Integer> ids = new ArrayList<>();
+            for (Activity a : acts) ids.add(a.getActivityId());
+            trip.setActivityIds(ids);
         }
     }
 }
