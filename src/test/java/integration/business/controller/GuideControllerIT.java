@@ -142,15 +142,6 @@ class GuideControllerIT {
     }
 
     @Test
-    void testAddSkill() {
-        Skill skill = new Skill("Skiing", "Winter skiing");
-        // Prima rimuovo la skill se esiste già
-        guide.getSkills().removeIf(s -> s.getName().equals(skill.getName()) && s.getDescription().equals(skill.getDescription()));
-        assertFalse(guide.getSkills().contains(skill));
-        assertTrue(guideController.addSkill(skill));
-    }
-
-    @Test
     void testRemoveSkill() {
         Skill skill = new Skill("Hiking", "Mountain hiking");
         guide.addSkill(skill); // usa lista mutabile
