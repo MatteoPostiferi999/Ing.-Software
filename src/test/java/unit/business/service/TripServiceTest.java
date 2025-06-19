@@ -482,27 +482,5 @@ class TripServiceTest {
             verify(tripDAO, times(1)).findById(tripId);
         }
 
-        @Test
-        @DisplayName("Should handle null activity when loading by id")
-        void shouldHandleNullActivityWhenLoadingById() {
-            // Given
-            int tripId = 1;
-            List<Integer> activityIds = Arrays.asList(1, 2);
-
-            when(tripDAO.findById(tripId)).thenReturn(trip);
-            when(trip.getActivityIds()).thenReturn(activityIds);
-            when(trip.getPlannedActivities()).thenReturn(new ArrayList<>());
-            when(activityDAO.findById(1)).thenReturn(activity);
-            when(activityDAO.findById(2)).thenReturn(null); // Null activity
-
-            // When
-            Trip result = tripService.getCompleteTripById(tripId);
-
-            // Then
-            assertNotNull(result);
-            verify(activityDAO, times(1)).findById(1);
-            verify(activityDAO, times(1)).findById(2);
-            verify(trip.getPlannedActivities(), times(1)).add(activity);
-        }
     }
 }

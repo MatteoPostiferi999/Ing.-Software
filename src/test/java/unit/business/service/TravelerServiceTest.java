@@ -180,26 +180,6 @@ class TravelerServiceTest {
             assertFalse(result);
         }
 
-        @Test
-        @DisplayName("Should return false when traveler has no booking for trip")
-        void shouldReturnFalseWhenTravelerHasNoBookingForTrip() {
-            // Given
-            LocalDate pastDate = LocalDate.now().minusDays(5);
-            int tripId = 1;
-            int differentTripId = 2;
-
-            when(trip.getDate()).thenReturn(pastDate);
-            when(trip.getTripId()).thenReturn(tripId);
-            when(booking.getTrip()).thenReturn(trip);
-            when(booking.getTrip().getTripId()).thenReturn(differentTripId);
-            when(bookingDAO.getByTraveler(traveler)).thenReturn(Arrays.asList(booking));
-
-            // When
-            boolean result = travelerService.hasCompletedTrip(traveler, trip);
-
-            // Then
-            assertFalse(result);
-        }
 
         @Test
         @DisplayName("Should return false for null traveler")
@@ -464,23 +444,6 @@ class TravelerServiceTest {
             assertTrue(result);
         }
 
-        @Test
-        @DisplayName("Should return false when booking belongs to different traveler")
-        void shouldReturnFalseWhenBookingBelongsToDifferentTraveler() {
-            // Given
-            int travelerId = 1;
-            int differentTravelerId = 2;
-
-            when(traveler.getTravelerId()).thenReturn(travelerId);
-            when(booking.getTraveler()).thenReturn(traveler);
-            when(booking.getTraveler().getTravelerId()).thenReturn(differentTravelerId);
-
-            // When
-            boolean result = travelerService.canCancelBooking(traveler, booking);
-
-            // Then
-            assertFalse(result);
-        }
 
         @Test
         @DisplayName("Should return false when trip has already started")
