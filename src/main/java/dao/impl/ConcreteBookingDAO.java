@@ -36,7 +36,7 @@ public class ConcreteBookingDAO implements BookingDAO {
 
     @Override
     public Booking getById(int bookingId) {
-        String sql = "SELECT * FROM booking WHERE booking_id = ?";
+        String sql = "SELECT * FROM bookings WHERE booking_id = ?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, bookingId);
@@ -52,7 +52,7 @@ public class ConcreteBookingDAO implements BookingDAO {
 
     @Override
     public Booking getByTravelerAndTrip(Traveler traveler, Trip trip) {
-        String sql = "SELECT * FROM booking WHERE traveler_id = ? AND trip_id = ?";
+        String sql = "SELECT * FROM bookings WHERE traveler_id = ? AND trip_id = ?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, traveler.getTravelerId());
@@ -70,7 +70,7 @@ public class ConcreteBookingDAO implements BookingDAO {
     @Override
     public List<Booking> getAll() {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM booking";
+        String sql = "SELECT * FROM bookings";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -86,7 +86,7 @@ public class ConcreteBookingDAO implements BookingDAO {
     @Override
     public List<Booking> getByTraveler(Traveler traveler) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM booking WHERE traveler_id = ?";
+        String sql = "SELECT * FROM bookings WHERE traveler_id = ?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, traveler.getTravelerId());
@@ -103,7 +103,7 @@ public class ConcreteBookingDAO implements BookingDAO {
     @Override
     public List<Booking> getByTripId(int tripId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM booking WHERE trip_id = ?";
+        String sql = "SELECT * FROM bookings WHERE trip_id = ?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, tripId);
@@ -147,7 +147,7 @@ public class ConcreteBookingDAO implements BookingDAO {
     }
 
     private void insertBooking(Booking booking) {
-        String sql = "INSERT INTO booking (traveler_id, trip_id, booking_date) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO bookings (traveler_id, trip_id, booking_date) VALUES (?, ?, ?)";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, booking.getTravelerId());
@@ -165,7 +165,7 @@ public class ConcreteBookingDAO implements BookingDAO {
     }
 
     private void updateBooking(Booking booking) {
-        String sql = "UPDATE booking SET traveler_id = ?, trip_id = ?, booking_date = ? WHERE booking_id = ?";
+        String sql = "UPDATE bookings SET traveler_id = ?, trip_id = ?, booking_date = ? WHERE booking_id = ?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, booking.getTravelerId());
@@ -180,7 +180,7 @@ public class ConcreteBookingDAO implements BookingDAO {
 
     @Override
     public void delete(Booking booking) {
-        String sql = "DELETE FROM booking WHERE booking_id = ?";
+        String sql = "DELETE FROM bookings WHERE booking_id = ?";
         try (Connection conn = dbManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, booking.getBookingId());
@@ -199,10 +199,10 @@ public class ConcreteBookingDAO implements BookingDAO {
 
         // Crea il booking con gli ID
         Booking booking = new Booking(
-            bookingId,
-            travelerId,
-            tripId,
-            bookingDate.toLocalDate()
+                bookingId,
+                travelerId,
+                tripId,
+                bookingDate.toLocalDate()
         );
 
         // Se disponibili, carica gli oggetti correlati
