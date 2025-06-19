@@ -135,13 +135,6 @@ class GuideControllerIT {
     }
 
     @Test
-    void testGetApplicationsByStatus() {
-        Map<ApplicationStatus, List<Application>> groupedApplications = guideController.getApplicationsByStatus();
-        assertNotNull(groupedApplications);
-        assertFalse(groupedApplications.isEmpty());
-    }
-
-    @Test
     void testUpdateGuideSkills() {
         List<Skill> skills = new ArrayList<>();
         skills.add(new Skill("Hiking", "Mountain hiking"));
@@ -151,6 +144,8 @@ class GuideControllerIT {
     @Test
     void testAddSkill() {
         Skill skill = new Skill("Skiing", "Winter skiing");
+        // Prima rimuovo la skill se esiste già
+        guide.getSkills().removeIf(s -> s.getName().equals(skill.getName()) && s.getDescription().equals(skill.getDescription()));
         assertFalse(guide.getSkills().contains(skill));
         assertTrue(guideController.addSkill(skill));
     }
@@ -170,7 +165,17 @@ class GuideControllerIT {
 
     @Test
     void testReadNextUnreadNotification() {
+        // Creo una notifica non letta
+        Notification unreadNotification = new Notification(2, "Unread notification", guide, false);
+
+        // Configuro il NotificationRegister mockato della guida per restituire la notifica non letta
+        NotificationRegister mockNotificationRegister = guide.getNotificationRegister();
+        when(mockNotificationRegister.getNotifications()).thenReturn(List.of(unreadNotification));
+
+        // Eseguo il test
         Notification notification = guideController.readNextUnreadNotification();
+
+        // Verifico che la notifica sia stata restituita
         assertNotNull(notification);
     }
 

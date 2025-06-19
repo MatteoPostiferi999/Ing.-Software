@@ -60,7 +60,6 @@ public class AssignmentServiceTest {
         when(trip.getAssignmentRegister()).thenReturn(assignmentRegister);
         when(assignmentRegister.getAssignments()).thenReturn(new ArrayList<>());
         when(app.getGuide()).thenReturn(guide);
-        when(guide.getRating()).thenReturn(4.5);
         when(trip.getTitle()).thenReturn("Test Trip");
 
         // Act
@@ -199,10 +198,18 @@ public class AssignmentServiceTest {
         when(guide.getGuideId()).thenReturn(1);
         Assignment assignment = mock(Assignment.class);
         when(assignment.getTripId()).thenReturn(1);
-        when(assignment.getTrip()).thenReturn(null);
+        when(assignment.getTrip()).thenReturn(null).thenReturn(trip); // Inizialmente null, poi restituisce trip dopo setTrip
         List<Assignment> assignments = Arrays.asList(assignment);
         when(assignmentDAO.findByGuideId(1)).thenReturn(assignments);
         when(tripDAO.findById(1)).thenReturn(trip);
+
+        // Simula il comportamento di setTrip che memorizza il trip nell'assignment
+        doAnswer(invocation -> {
+            Trip tripArg = invocation.getArgument(0);
+            // Questo fa sì che le chiamate successive a getTrip() restituiscano il trip impostato
+            when(assignment.getTrip()).thenReturn(tripArg);
+            return null;
+        }).when(assignment).setTrip(any(Trip.class));
 
         // Act
         List<Trip> result = assignmentService.getTripsForGuide(guide);
@@ -211,5 +218,6 @@ public class AssignmentServiceTest {
         assertFalse(result.isEmpty());
         assertEquals(trip, result.get(0));
         verify(tripDAO).findById(1);
+        verify(assignment).setTrip(trip);
     }
 }
